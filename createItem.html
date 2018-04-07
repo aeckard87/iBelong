@@ -1,0 +1,71 @@
+<!-- <form action="/createItem" id="readMore0" method="post" name="createItem"> -->
+<!--     <div id="more"> -->
+<!--         <select name="userID" id="userID"> Owner -->
+<!--             {{range .}} -->
+<!--                 <option value="{{.ID}}">{{.FirstName}} {{.LastName}}</option> --> 
+<!--             {{end}} -->
+<!--         </select> -->
+
+<!--         <select name="userID" id="userID"> Owner -->
+<!--             {{range .}} -->
+<!--                 <option value="{{.ID}}">{{.FirstName}} {{.LastName}}</option> --> 
+<!--             {{end}} -->
+<!--         </select> -->
+<!--       <a href="#" onclick="document.createItem.submit()">Read More</a> -->
+<!--     </div> -->
+
+<!--   </form> -->
+
+
+  <!-- 
+  Name
+  Category
+    subcategory
+  Detail
+    Description
+    Owner
+    -->
+
+<!-- NAME -->
+Name:<input type="text" name="name"><br>
+
+<!-- Category -->
+{{define "category"}}
+<select name="categoryID" id="categoryID"> Category
+  {{range .}}
+      <option value="{{.ID}}">{{.Category}}</option>
+  {{end}}
+</select>
+<!-- SubCategory -->
+<select name="subCategoryID" id="subCategoryID"> SubCategory
+  {{range .}}
+      <option value="{{.ID}}">{{.SubCategory}}</option>
+  {{end}}
+</select>
+{{end}}
+
+
+<!-- Detail -->
+{{define "detail"}}
+<select name="detailID" id="detailID"> Detail
+  {{range .}}
+  <option value="{{.ID}}">{{.Detail}}</option>
+  {{end}}
+</select>
+<!-- Description -->
+<select name="descriptorID" id="descriptorID"> Descrption
+  {{range .}}
+      <option value="{{.ID}}">{{.Descriptor}}</option>
+  {{end}}
+</select>
+{{end}}
+
+
+<!-- Owner -->
+{{define "owner"}}
+<select name="userID" id="userID"> Owner
+  {{range .}}
+      <option value="{{.ID}}">{{.FirstName}} {{.LastName}}</option>
+  {{end}}
+</select>
+{{end}}

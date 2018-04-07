@@ -1,0 +1,11 @@
+<h1>{{.FirstName}}'s Items<h1>
+{{if .Items -}}
+<ul>
+    {{- range .Items}}
+            <li>{{.Name}}</li>
+    {{end}}
+</ul>
+{{- else}}
+No Items Saved.
+{{- end}}
+<a href="/">Home</a>
