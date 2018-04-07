@@ -7,17 +7,20 @@ import (
 	"time"
 )
 
+// Accunt struct
 type Account struct {
 	FirstName string
 	LastName  string
 }
 
+// Purchase struct
 type Purchase struct {
 	Date          time.Time
 	Description   string
 	AmountInCents int
 }
 
+// Statement Struct
 type Statement struct {
 	FromDate  time.Time
 	ToDate    time.Time
@@ -31,7 +34,8 @@ func main() {
 		"formatAsDate":    formatAsDate,
 		"urgentNote":      urgentNote,
 	}
-	t := template.Must(template.New("email.tmpl").Funcs(fmap).ParseFiles("email.tmpl"))
+	file := "email.tmpl"
+	t := template.Must(template.New(file).Funcs(fmap).ParseFiles(file))
 	err := t.Execute(os.Stdout, createMockStatement())
 	if err != nil {
 		panic(err)
