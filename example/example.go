@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// Accunt struct
+// Account struct
 type Account struct {
 	FirstName string
 	LastName  string
