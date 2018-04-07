@@ -13,6 +13,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"github.com/aeckard87/WornOut/models"
 	strfmt "github.com/go-openapi/strfmt"
 	"github.com/julienschmidt/httprouter"
 
@@ -87,7 +88,13 @@ func (c *Category) GetCatgegories() []Category {
 	}
 }
 
-func CreateCategory(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func GetCreateCategory(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	var category models.Category
+	tmpl := template.Must(template.ParseFiles("templates/categories/createCategory.html"))
+	tmpl.Execute(w, category)
+}
+
+func PostCreateCategory(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var category Category
 	err := r.ParseForm()
 	if err != nil {

@@ -6,7 +6,14 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
+	"fmt"
+	"html/template"
+	"io/ioutil"
+	"net/http"
+
 	strfmt "github.com/go-openapi/strfmt"
+	"github.com/julienschmidt/httprouter"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
@@ -69,4 +76,28 @@ func (m *User) UnmarshalBinary(b []byte) error {
 	}
 	*m = res
 	return nil
+}
+
+func GetListUsers(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	usersTmpl := template.Must(template.ParseFiles("templates/users/users.html"))
+	url := "http://localhost:9000/v1/users"
+	var client http.Client
+	resp, err := client.Get(url)
+	if err != nil {
+		// err
+	}
+	defer resp.Body.Close()
+	var users []User
+	if resp.StatusCode == http.StatusOK {
+		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
+		if err2 != nil {
+			fmt.Println(err2)
+		}
+		// bodyString := string(bodyBytes)
+		// fmt.Println(bodyString)
+		json.Unmarshal(bodyBytes, &users)
+		usersTmpl.Execute(w, users)
+	} else {
+		usersTmpl.Execute(w, users)
+	}
 }

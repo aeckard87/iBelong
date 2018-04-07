@@ -6,7 +6,14 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
+	"fmt"
+	"html/template"
+	"io/ioutil"
+	"net/http"
+
 	strfmt "github.com/go-openapi/strfmt"
+	"github.com/julienschmidt/httprouter"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
@@ -31,6 +38,15 @@ type Item struct {
 
 	// user ID
 	UserID int64 `json:"userID,omitempty"`
+}
+
+type Owner struct {
+	FirstName string
+	LastName  string
+	Username  string
+	ID        int
+	Email     string
+	Items     []Item
 }
 
 /* polymorph Item descriptions false */
@@ -69,4 +85,63 @@ func (m *Item) UnmarshalBinary(b []byte) error {
 	}
 	*m = res
 	return nil
+}
+
+func GetListItems(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	itemTmpl := template.Must(template.ParseFiles("templates/items/items.html"))
+	url := "http://localhost:9000/v1/items"
+	var client http.Client
+	resp, err := client.Get(url)
+	if err != nil {
+		// err
+	}
+	defer resp.Body.Close()
+	var items []Item
+	if resp.StatusCode == http.StatusOK {
+		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
+		if err2 != nil {
+			fmt.Println(err2)
+		}
+		// bodyString := string(bodyBytes)
+		// fmt.Println(bodyString)
+		json.Unmarshal(bodyBytes, &items)
+		itemTmpl.Execute(w, items)
+	} else {
+		itemTmpl.Execute(w, items)
+	}
+}
+
+func ItemsByOwner(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
+	tmpl := template.Must(template.ParseFiles("templates/items/itemsByOwner.html"))
+	itemUrl := "http://localhost:9000/v1/users/" + ps.ByName("userID") + "/items"
+	userUrl := "http://localhost:9000/v1/users/" + ps.ByName("userID")
+	var client http.Client
+	itemResp, err := client.Get(itemUrl)
+	userResp, err := client.Get(userUrl)
+	if err != nil {
+		// err
+	}
+	defer itemResp.Body.Close()
+	defer userResp.Body.Close()
+	var items []Item
+	var owner Owner
+
+	if itemResp.StatusCode == http.StatusOK && userResp.StatusCode == http.StatusOK {
+		itemBytes, err2 := ioutil.ReadAll(itemResp.Body)
+		userBytes, err2 := ioutil.ReadAll(userResp.Body)
+		if err2 != nil {
+			fmt.Println(err2)
+		}
+
+		// bodyString := string(bodyBytes)
+		// fmt.Println(bodyString)
+		json.Unmarshal(itemBytes, &items)
+		json.Unmarshal(userBytes, &owner)
+		owner.Items = items
+
+		tmpl.Execute(w, owner)
+	} else {
+		tmpl.Execute(w, owner)
+	}
 }
