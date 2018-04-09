@@ -13,7 +13,7 @@ import (
 	"net/http"
 
 	strfmt "github.com/go-openapi/strfmt"
-	"github.com/julienschmidt/httprouter"
+	"github.com/gorilla/mux"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
@@ -87,7 +87,7 @@ func (m *Item) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-func GetListItems(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func GetListItems(w http.ResponseWriter, r *http.Request) {
 	itemTmpl := template.Must(template.ParseFiles("templates/items/items.html"))
 	url := "http://localhost:9000/v1/items"
 	var client http.Client
@@ -111,11 +111,14 @@ func GetListItems(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	}
 }
 
-func ItemsByOwner(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func ItemsByOwner(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["ID"]
 
 	tmpl := template.Must(template.ParseFiles("templates/items/itemsByOwner.html"))
-	itemUrl := "http://localhost:9000/v1/users/" + ps.ByName("userID") + "/items"
-	userUrl := "http://localhost:9000/v1/users/" + ps.ByName("userID")
+	itemUrl := "http://localhost:9000/v1/users/" + id + "/items"
+	userUrl := "http://localhost:9000/v1/users/" + id
+
 	var client http.Client
 	itemResp, err := client.Get(itemUrl)
 	userResp, err := client.Get(userUrl)
@@ -124,6 +127,7 @@ func ItemsByOwner(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	}
 	defer itemResp.Body.Close()
 	defer userResp.Body.Close()
+
 	var items []Item
 	var owner Owner
 

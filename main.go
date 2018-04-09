@@ -5,31 +5,73 @@ import (
 	"net/http"
 
 	models "github.com/aeckard87/iBelong/models"
-	"github.com/julienschmidt/httprouter"
+	"github.com/gorilla/mux"
 )
 
 func main() {
-	router := httprouter.New()
-	router.GET("/", index)
+
+	r := mux.NewRouter()
+	// r.HandleFunc("/search/{searchTerm}", Search)
+	// r.HandleFunc("/load/{dataId}", Load)
+	r.HandleFunc("/", index)
 
 	//Categories
-	router.GET("/categories", models.ListCategories)
-	router.GET("/categories/create", models.GetCreateCategory)
-	router.POST("/categories/create", models.PostCreateCategory)
-	//SubCategories
-	//Details
-	//Descriptors
-	//Users
-	router.GET("/users", models.GetListUsers)
-	router.GET("/users/:userID/items", models.ItemsByOwner)
-	//Items
-	router.GET("/items", models.GetListItems)
+	r.HandleFunc("/categories", models.ListCategories).Methods("GET")
+	//Create
+	r.HandleFunc("categories/create", models.PostCreateCategory).Methods("POST")
+	r.HandleFunc("categories/create", models.GetCreateCategory).Methods("GET")
+	//Delete
+	r.HandleFunc("categories/delete", models.PostDeleteCategory).Methods("POST")
+	r.HandleFunc("categories/delete", models.GetDeleteCategory).Methods("GET")
 
-	http.ListenAndServe(":8081", router)
+	//SubCategories
+	//
+	//Details
+	//
+	//Descriptors
+	//
+	//Users
+	r.HandleFunc("/users", models.GetListUsers)
+	r.HandleFunc("/users/{ID}/items", models.ItemsByOwner).Methods("GET")
+
+	//Items
+	r.HandleFunc("/items", models.GetListItems).Methods("GET")
+
+	//Static file location
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
+	http.Handle("/", r)
+	http.ListenAndServe(":8100", nil)
+
+	//----------------//
+
+	// router := httprouter.New()
+	// http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./static"))))
+
+	// router.GET("/", index)
+
+	// //Categories
+	// router.GET("/categories", models.ListCategories)
+	// //Create
+	// router.GET("/categories/create", models.GetCreateCategory)
+	// router.POST("/categories/create", models.PostCreateCategory)
+	// //delete
+	// router.GET("/categories/delete", models.GetDeleteCategory)
+	// router.POST("/categories/delete", models.PostDeleteCategory)
+
+	// //SubCategories
+	// //Details
+	// //Descriptors
+	// //Users
+	// router.GET("/users", models.GetListUsers)
+	// router.GET("/users/:userID/items", models.ItemsByOwner)
+	// //Items
+	// router.GET("/items", models.GetListItems)
+
+	// http.ListenAndServe(":8081", router)
 
 }
 
-func index(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	tmpl := template.Must(template.ParseFiles("layout.html"))
+func index(w http.ResponseWriter, r *http.Request) {
+	tmpl := template.Must(template.ParseFiles("templates/index.html"))
 	tmpl.Execute(w, nil)
 }

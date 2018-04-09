@@ -1,11 +1,39 @@
-<h1>{{.FirstName}}'s Items<h1>
-{{if .Items -}}
-<ul>
-    {{- range .Items}}
-            <li>{{.Name}}</li>
-    {{end}}
-</ul>
-{{- else}}
-No Items Saved.
-{{- end}}
-<a href="/">Home</a>
+<!-- <h1>{{.FirstName}}'s Items<h1> -->
+<!-- {{if .Items -}} -->
+<!-- <ul> -->
+<!--     {{- range .Items}} -->
+<!--             <li>{{.Name}}</li> -->
+<!--     {{end}} -->
+<!-- </ul> -->
+<!-- {{- else}} -->
+<!-- No Items Saved. -->
+<!-- {{- end}} -->
+<!-- <form action="/"> -->
+<!--     <input type="submit" value="Home" /> -->
+<!-- </form> -->
+
+
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>iBelong - Owner's Items</title>
+    <link rel="stylesheet" href="css/theme.css" type="text/css">
+  </head>
+  <body>
+    <h1>{{.FirstName}}'s Items<h1>
+        <div>
+            {{if .Items -}}
+            <ul>
+                {{- range .Items}}
+                        <li>{{.Name}}</li>
+                {{end}}
+            </ul>
+            {{- else}}
+            No Items Saved.
+            {{- end}}
+        </div>
+      <a href="/" class="button">Home</a>
+  </body>
+</html>

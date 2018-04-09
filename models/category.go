@@ -15,7 +15,6 @@ import (
 
 	"github.com/aeckard87/WornOut/models"
 	strfmt "github.com/go-openapi/strfmt"
-	"github.com/julienschmidt/httprouter"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
@@ -88,13 +87,13 @@ func (c *Category) GetCatgegories() []Category {
 	}
 }
 
-func GetCreateCategory(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func GetCreateCategory(w http.ResponseWriter, r *http.Request) {
 	var category models.Category
 	tmpl := template.Must(template.ParseFiles("templates/categories/createCategory.html"))
 	tmpl.Execute(w, category)
 }
 
-func PostCreateCategory(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func PostCreateCategory(w http.ResponseWriter, r *http.Request) {
 	var category Category
 	err := r.ParseForm()
 	if err != nil {
@@ -125,9 +124,12 @@ func PostCreateCategory(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 	body, _ := ioutil.ReadAll(resp.Body)
 	fmt.Println("response Body:", string(body))
 
+	// ListCategories(w, r, ps)
+	ListCategories(w, r)
+
 }
 
-func ListCategories(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func ListCategories(w http.ResponseWriter, r *http.Request) { //, ps httprouter.Params) {
 	tmpl := template.Must(template.ParseFiles("templates/categories/listCategories.html"))
 	url := "http://localhost:9000/v1/categories"
 	var client http.Client
@@ -149,4 +151,58 @@ func ListCategories(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 	} else {
 		tmpl.Execute(w, categories)
 	}
+}
+
+func GetDeleteCategory(w http.ResponseWriter, r *http.Request) {
+	tmpl := template.Must(template.ParseFiles("templates/categories/deleteCategory.html"))
+	url := "http://localhost:9000/v1/categories"
+	var client http.Client
+	resp, err := client.Get(url)
+	if err != nil {
+		// err
+	}
+	defer resp.Body.Close()
+	var categories []Category
+	if resp.StatusCode == http.StatusOK {
+		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
+		if err2 != nil {
+			fmt.Println(err2)
+		}
+		// bodyString := string(bodyBytes)
+		// fmt.Println(bodyString)
+		json.Unmarshal(bodyBytes, &categories)
+		tmpl.Execute(w, categories)
+	} else {
+		tmpl.Execute(w, categories)
+	}
+}
+
+func PostDeleteCategory(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	for key, value := range r.PostForm {
+		fmt.Printf("Key: %s\tValue: %s", key, value)
+	}
+
+	request_url := "http://localhost:9000/v1/categories/" + r.PostForm.Get("categoryID")
+	fmt.Println(request_url)
+	req, err := http.NewRequest("DELETE", request_url, nil)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	fmt.Println("response Status:", resp.Status)
+	fmt.Println("response Headers:", resp.Header)
+	body, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println("response Body:", string(body))
+
+	GetDeleteCategory(w, r)
+
 }

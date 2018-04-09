@@ -13,7 +13,6 @@ import (
 	"net/http"
 
 	strfmt "github.com/go-openapi/strfmt"
-	"github.com/julienschmidt/httprouter"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
@@ -78,7 +77,7 @@ func (m *User) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-func GetListUsers(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func GetListUsers(w http.ResponseWriter, r *http.Request) {
 	usersTmpl := template.Must(template.ParseFiles("templates/users/users.html"))
 	url := "http://localhost:9000/v1/users"
 	var client http.Client

@@ -1,7 +1,30 @@
-<h1>Items<h1>
-<ul>
-    {{range .}}
-            <li>{{.Name}}</li>
-    {{end}}
-</ul>
-<a href="/">Home</a>
+<!-- <h1>Items<h1> -->
+<!-- <ul> -->
+<!--     {{range .}} -->
+<!--             <li>{{.Name}}</li> -->
+<!--     {{end}} -->
+<!-- </ul> -->
+<!-- <form action="/"> -->
+<!--     <input type="submit" value="Home" /> -->
+<!-- </form> -->
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>iBelong - Items</title>
+    <link rel="stylesheet" href="css/theme.css" type="text/css">
+  </head>
+  <body>
+      <h1>Items<h1>
+      <div>
+        <ul>
+            {{range .}}
+                    <li>{{.Name}}</li>
+            {{end}}
+        </ul>
+      </div>
+      <a href="/" class="button">Home</a>
+  </body>
+</html>
+
