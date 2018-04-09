@@ -88,12 +88,14 @@ func (c *Category) GetCatgegories() []Category {
 }
 
 func GetCreateCategory(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("GET Category/Create")
 	var category models.Category
 	tmpl := template.Must(template.ParseFiles("templates/categories/createCategory.html"))
 	tmpl.Execute(w, category)
 }
 
 func PostCreateCategory(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("POST Category/Create")
 	var category Category
 	err := r.ParseForm()
 	if err != nil {

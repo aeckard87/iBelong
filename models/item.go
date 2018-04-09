@@ -112,10 +112,11 @@ func GetListItems(w http.ResponseWriter, r *http.Request) {
 }
 
 func ItemsByOwner(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("GET ItemsByOwner")
 	vars := mux.Vars(r)
 	id := vars["ID"]
 
-	tmpl := template.Must(template.ParseFiles("templates/items/itemsByOwner.html"))
+	tmpl := template.Must(template.ParseFiles("./templates/items/itemsByOwner.html"))
 	itemUrl := "http://localhost:9000/v1/users/" + id + "/items"
 	userUrl := "http://localhost:9000/v1/users/" + id
 
