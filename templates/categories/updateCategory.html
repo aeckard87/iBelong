@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>iBelong - Update Category</title>
+    <link rel="stylesheet" href="../css/theme.css" type="text/css">
+  </head>
+  <body>
+    <h1>Update Category</h1>
+      <div>
+        <form action="/categories/update" id="updateCategory" method="post" name="updateCategory">
+              <select name="categoryID" id="categoryID "onchange="setField(this)">
+                <option value="">---</option>
+                {{range .}}
+                    <option value="{{.ID}}">{{.Category}}</option>
+                {{end}}
+              </select>
+              <!-- <a href="#" onclick="document.deleteCategory.submit()">Delete</a> -->
+              Name:<input type="text" name="name" id="name"><br>
+              <button type="submit" form="updateCategory" value="Submit">Update</button>
+        </form>
+      </div>
+      <a href="/" class="button">Home</a>
+
+
+  <script>
+    function setField(sel) {
+      document.getElementById("name").setAttribute("value",sel.options[sel.selectedIndex].text);
+    }
+    </script>
+  </body>
+</html>
+

@@ -17,9 +17,13 @@ func main() {
 
 	//Categories
 	r.HandleFunc("/categories", models.ListCategories).Methods("GET")
+	r.HandleFunc("/categories/{ID}", models.ListCategory).Methods("GET")
 	//Create
 	r.HandleFunc("/categories/create", models.PostCreateCategory).Methods("POST")
 	r.HandleFunc("/categories/create", models.GetCreateCategory).Methods("GET")
+	//Update
+	r.HandleFunc("/categories/update", models.PostUpdateCategory).Methods("POST")
+	r.HandleFunc("/categories/update", models.GetUpdateCategory).Methods("GET")
 	//Delete
 	r.HandleFunc("/categories/delete", models.PostDeleteCategory).Methods("POST")
 	r.HandleFunc("/categories/delete", models.GetDeleteCategory).Methods("GET")
@@ -39,6 +43,8 @@ func main() {
 
 	//Static file location
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
+	// http.Handle("/tmp/", http.StripPrefix("/tmp/", http.FileServer(http.Dir("./static/"))))
+
 	http.Handle("/", r)
 	http.ListenAndServe(":8100", nil)
 

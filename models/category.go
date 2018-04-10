@@ -15,6 +15,7 @@ import (
 
 	"github.com/aeckard87/WornOut/models"
 	strfmt "github.com/go-openapi/strfmt"
+	"github.com/gorilla/mux"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
@@ -22,6 +23,7 @@ import (
 
 // Category category
 // swagger:model Category
+// Utilize GetCategories function and also update redirects!
 
 type Category struct {
 
@@ -64,8 +66,8 @@ func (m *Category) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-func (c *Category) GetCatgegories() []Category {
-	url := "http://localhost:9000/v1/categories/" + string(c.ID)
+func GetCategories() []Category {
+	url := "http://localhost:9000/v1/categories/"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
@@ -129,6 +131,78 @@ func PostCreateCategory(w http.ResponseWriter, r *http.Request) {
 	// ListCategories(w, r, ps)
 	ListCategories(w, r)
 
+}
+
+func GetUpdateCategory(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("GET Category/Update")
+	tmpl := template.Must(template.ParseFiles("templates/categories/updateCategory.html"))
+	tmpl.Execute(w, GetCategories())
+}
+
+func PostUpdateCategory(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("POST Category/Create")
+	var category Category
+	err := r.ParseForm()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	category.Category = r.PostForm.Get("name")
+	// category.ID, err := strconv.Atoi(r.PostForm.Get("categoryID"))
+	b, err := json.Marshal(category)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	request_url := "http://localhost:9000/v1/categories/" + r.PostForm.Get("categoryID")
+	req, err := http.NewRequest("PUT", request_url, bytes.NewBuffer(b))
+	req.Header.Set("X-Custom-Header", "myvalue")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	fmt.Println("response Status:", resp.Status)
+	fmt.Println("response Headers:", resp.Header)
+	body, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println("response Body:", string(body))
+
+	http.Redirect(w, r, "http://localhost:8100/categories", 301)
+
+}
+
+func ListCategory(w http.ResponseWriter, r *http.Request) { //, ps httprouter.Params) {
+	vars := mux.Vars(r)
+	id := vars["ID"]
+
+	tmpl := template.Must(template.ParseFiles("templates/categories/listCategory.html"))
+	url := "http://localhost:9000/v1/categories/" + id
+
+	var client http.Client
+	resp, err := client.Get(url)
+	if err != nil {
+		// err
+	}
+
+	defer resp.Body.Close()
+	var category Category
+	if resp.StatusCode == http.StatusOK {
+		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
+		if err2 != nil {
+			fmt.Println(err2)
+		}
+		// bodyString := string(bodyBytes)
+		// fmt.Println(bodyString)
+		json.Unmarshal(bodyBytes, &category)
+		tmpl.Execute(w, category)
+	} else {
+		tmpl.Execute(w, category)
+	}
 }
 
 func ListCategories(w http.ResponseWriter, r *http.Request) { //, ps httprouter.Params) {
