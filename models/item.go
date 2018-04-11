@@ -132,14 +132,14 @@ func ItemsByOwner(w http.ResponseWriter, r *http.Request) {
 	var items []Item
 	var owner Owner
 
-	if itemResp.StatusCode == http.StatusOK && userResp.StatusCode == http.StatusOK {
+	if userResp.StatusCode == http.StatusOK {
 		itemBytes, err2 := ioutil.ReadAll(itemResp.Body)
 		userBytes, err2 := ioutil.ReadAll(userResp.Body)
 		if err2 != nil {
 			fmt.Println(err2)
 		}
 
-		// bodyString := string(bodyBytes)
+		// bodyString := string(userBytes)
 		// fmt.Println(bodyString)
 		json.Unmarshal(itemBytes, &items)
 		json.Unmarshal(userBytes, &owner)

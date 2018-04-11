@@ -17,7 +17,7 @@ func main() {
 
 	//Categories
 	r.HandleFunc("/categories", models.ListCategories).Methods("GET")
-	r.HandleFunc("/categories/{ID}", models.ListCategory).Methods("GET")
+	// r.HandleFunc("/categories/{ID}", models.ListCategory).Methods("GET")
 	//Create
 	r.HandleFunc("/categories/create", models.PostCreateCategory).Methods("POST")
 	r.HandleFunc("/categories/create", models.GetCreateCategory).Methods("GET")

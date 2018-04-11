@@ -176,32 +176,35 @@ func PostUpdateCategory(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func ListCategory(w http.ResponseWriter, r *http.Request) { //, ps httprouter.Params) {
+//Not working as expected
+func ListCategory(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["ID"]
 
 	tmpl := template.Must(template.ParseFiles("templates/categories/listCategory.html"))
-	url := "http://localhost:9000/v1/categories/" + id
+	url := fmt.Sprintf("http://localhost:9000/v1/categories/%v", id)
+	fmt.Println("URL", url)
 
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
 		// err
 	}
-
 	defer resp.Body.Close()
-	var category Category
+
+	var categories Category
 	if resp.StatusCode == http.StatusOK {
 		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
 		if err2 != nil {
 			fmt.Println(err2)
 		}
-		// bodyString := string(bodyBytes)
-		// fmt.Println(bodyString)
-		json.Unmarshal(bodyBytes, &category)
-		tmpl.Execute(w, category)
+		bodyString := string(bodyBytes)
+		fmt.Println(bodyString)
+		json.Unmarshal(bodyBytes, &categories)
+		fmt.Println("Unmarshaled", categories)
+		tmpl.Execute(w, categories)
 	} else {
-		tmpl.Execute(w, category)
+		tmpl.Execute(w, categories)
 	}
 }
 
