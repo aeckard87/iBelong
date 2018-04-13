@@ -6,7 +6,16 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"html/template"
+	"io/ioutil"
+	"net/http"
+
+	"github.com/aeckard87/WornOut/models"
 	strfmt "github.com/go-openapi/strfmt"
+	"github.com/gorilla/mux"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
@@ -54,4 +63,224 @@ func (m *Detail) UnmarshalBinary(b []byte) error {
 	}
 	*m = res
 	return nil
+}
+
+func GetDetails() []Detail {
+	url := "http://localhost:9000/v1/details/"
+	var client http.Client
+	resp, err := client.Get(url)
+	if err != nil {
+		// err
+	}
+	defer resp.Body.Close()
+	var details []Detail
+	if resp.StatusCode == http.StatusOK {
+		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
+		if err2 != nil {
+			fmt.Println(err2)
+		}
+		// bodyString := string(bodyBytes)
+		// fmt.Println(bodyString)
+		json.Unmarshal(bodyBytes, &details)
+		return details
+	} else {
+		return details
+	}
+}
+
+func GetCreateDetail(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("GET Detail/Create")
+	var detail models.Detail
+	tmpl := template.Must(template.ParseFiles("templates/details/createDetail.html"))
+	tmpl.Execute(w, detail)
+}
+
+func PostCreateDetail(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("POST Detail/Create")
+	var detail Detail
+	err := r.ParseForm()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	detail.Detail = r.PostForm.Get("name")
+	b, err := json.Marshal(detail)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	request_url := "http://localhost:9000/v1/details"
+	req, err := http.NewRequest("POST", request_url, bytes.NewBuffer(b))
+	req.Header.Set("X-Custom-Header", "myvalue")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	fmt.Println("response Status:", resp.Status)
+	fmt.Println("response Headers:", resp.Header)
+	body, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println("response Body:", string(body))
+
+	// ListDetails(w, r, ps)
+	ListDetails(w, r)
+
+}
+
+func GetUpdateDetail(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("GET Detail/Update")
+	tmpl := template.Must(template.ParseFiles("templates/details/updateDetail.html"))
+	tmpl.Execute(w, GetDetails())
+}
+
+func PostUpdateDetail(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("POST Detail/Create")
+	var detail Detail
+	err := r.ParseForm()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	detail.Detail = r.PostForm.Get("name")
+	// detail.ID, err := strconv.Atoi(r.PostForm.Get("detailID"))
+	b, err := json.Marshal(detail)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	request_url := "http://localhost:9000/v1/details/" + r.PostForm.Get("detailID")
+	req, err := http.NewRequest("PUT", request_url, bytes.NewBuffer(b))
+	req.Header.Set("X-Custom-Header", "myvalue")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	fmt.Println("response Status:", resp.Status)
+	fmt.Println("response Headers:", resp.Header)
+	body, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println("response Body:", string(body))
+
+	http.Redirect(w, r, "http://localhost:8100/details", 301)
+
+}
+
+//Not working as expected
+func ListDetail(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["ID"]
+
+	tmpl := template.Must(template.ParseFiles("templates/details/listDetail.html"))
+	url := fmt.Sprintf("http://localhost:9000/v1/details/%v", id)
+	fmt.Println("URL", url)
+
+	var client http.Client
+	resp, err := client.Get(url)
+	if err != nil {
+		// err
+	}
+	defer resp.Body.Close()
+
+	var details Detail
+	if resp.StatusCode == http.StatusOK {
+		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
+		if err2 != nil {
+			fmt.Println(err2)
+		}
+		bodyString := string(bodyBytes)
+		fmt.Println(bodyString)
+		json.Unmarshal(bodyBytes, &details)
+		fmt.Println("Unmarshaled", details)
+		tmpl.Execute(w, details)
+	} else {
+		tmpl.Execute(w, details)
+	}
+}
+
+func ListDetails(w http.ResponseWriter, r *http.Request) { //, ps httprouter.Params) {
+	tmpl := template.Must(template.ParseFiles("templates/details/listDetails.html"))
+	url := "http://localhost:9000/v1/details"
+	var client http.Client
+	resp, err := client.Get(url)
+	if err != nil {
+		// err
+	}
+	defer resp.Body.Close()
+	var details []Detail
+	if resp.StatusCode == http.StatusOK {
+		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
+		if err2 != nil {
+			fmt.Println(err2)
+		}
+		// bodyString := string(bodyBytes)
+		// fmt.Println(bodyString)
+		json.Unmarshal(bodyBytes, &details)
+		tmpl.Execute(w, details)
+	} else {
+		tmpl.Execute(w, details)
+	}
+}
+
+func GetDeleteDetail(w http.ResponseWriter, r *http.Request) {
+	tmpl := template.Must(template.ParseFiles("templates/details/deleteDetail.html"))
+	url := "http://localhost:9000/v1/details"
+	var client http.Client
+	resp, err := client.Get(url)
+	if err != nil {
+		// err
+	}
+	defer resp.Body.Close()
+	var details []Detail
+	if resp.StatusCode == http.StatusOK {
+		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
+		if err2 != nil {
+			fmt.Println(err2)
+		}
+		// bodyString := string(bodyBytes)
+		// fmt.Println(bodyString)
+		json.Unmarshal(bodyBytes, &details)
+		tmpl.Execute(w, details)
+	} else {
+		tmpl.Execute(w, details)
+	}
+}
+
+func PostDeleteDetail(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	for key, value := range r.PostForm {
+		fmt.Printf("Key: %s\tValue: %s", key, value)
+	}
+
+	request_url := "http://localhost:9000/v1/details/" + r.PostForm.Get("detailID")
+	fmt.Println(request_url)
+	req, err := http.NewRequest("DELETE", request_url, nil)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	fmt.Println("response Status:", resp.Status)
+	fmt.Println("response Headers:", resp.Header)
+	body, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println("response Body:", string(body))
+
+	GetDeleteDetail(w, r)
+
 }

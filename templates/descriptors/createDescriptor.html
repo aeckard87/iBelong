@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>iBelong - Create SubCategory</title>
+    <link rel="stylesheet" href="../css/theme.css" type="text/css">
+  </head>
+  <body>
+    <h1>Create SubCategory</h1>
+        <div>
+        <form action="/subcategories/create" id="createSubCategory" method="post" name="createSubCategory">
+              <select name="categoryID" id="categoryID" onchange="unlock(this)">
+                    <option value="empty">---</option>
+                {{range .}}
+                <option value="{{.ID}}">{{.Category}}</option>
+                {{end}}
+              </select>
+            Name:<input type="text" name="name" id="name" value="Must Select Category" disabled><br>
+          <!-- <a href="#" onclick="document.createSubCategory.submit()">Submit</a> -->
+          <button type="submit" form="createSubCategory" value="Submit">Create</button>
+          </form>
+          <div id="devSubCat"></div>
+        </div>
+    <a href="/" class="button">Home</a>
+
+<script>
+    function unlock(sel) {
+      if (sel.selectedIndex != 0) {
+      document.getElementById("name").disabled = false;
+      document.getElementById("name").setAttribute("value", "");
+        loadDoc(sel.value)
+
+      } else {
+      document.getElementById("name").setAttribute("value","Must Select Category");
+      document.getElementById("name").disabled = true;
+      document.getElementById("devSubCat").innerHTML = "";
+      }
+    }
+
+    function function1() {
+      var ul = document.getElementById("list");
+      var li = document.createElement("li");
+      li.appendChild(document.createTextNode("Four"));
+      ul.appendChild(li);
+    }
+function loadDoc(id) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange=function() {
+    if (this.readyState == 4 && this.status == 200) {
+      json = JSON.parse(this.responseText);
+      if (json.length == 0){
+        document.getElementById("devSubCat").innerHTML = '<p>No Subcategories for selected Category exist. You should add one!';
+      }else{
+        document.getElementById("devSubCat").innerHTML = "";
+        document.getElementById("devSubCat").innerHTML = '<p>SubCategories in selected Category:</p><ol id="demo"></ol>';
+        var list = document.getElementById('demo');
+        for( index in json ){
+          var value = json[index];
+          var entry = document.createElement('li');
+          entry.appendChild(document.createTextNode(value.subcategory));
+          list.appendChild(entry);
+        }
+      }
+    }
+  };
+  xhttp.open("GET", "http://localhost:9000/v1/catagories/" + id + "/subcategories", true);
+  xhttp.send();
+}
+
+
+    </script>
+  </body>
+</html>

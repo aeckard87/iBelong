@@ -66,7 +66,7 @@ func (m *SubCategory) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-func subCategoiresByCategory(id int64) []SubCategory {
+func descriptorsByDetail(id int64) []SubCategory {
 	// fmt.Println("ID", id)
 	url := fmt.Sprintf("http://127.0.0.1:9000/v1/catagories/%v/subcategories", id)
 	// fmt.Println(url)
@@ -122,7 +122,7 @@ func GetCreateSubCategory(w http.ResponseWriter, r *http.Request) {
 	categories := GetCategories()
 	// tmpl := template.Must(template.ParseFiles("templates/subcategories/createSubCategory.html"))
 	tmpl, err := template.New("createSubCategory.html").Funcs(template.FuncMap{
-		"subcatByCat": subCategoiresByCategory,
+		"subcatByCat": descriptorsByDetail,
 	}).ParseFiles("templates/subcategories/createSubCategory.html")
 	if err != nil {
 		fmt.Println(err)
