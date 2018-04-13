@@ -9,7 +9,7 @@
     <h1>Update Category</h1>
       <div>
         <form action="/categories/update" id="updateCategory" method="post" name="updateCategory">
-              <select name="categoryID" id="categoryID "onchange="setField(this)">
+              <select name="categoryID" id="categoryID" onchange="setField(this)">
                 <option value="">---</option>
                 {{range .}}
                     <option value="{{.ID}}">{{.Category}}</option>

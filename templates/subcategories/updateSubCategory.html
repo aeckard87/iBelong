@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>iBelong - Update SubCategory</title>
+    <link rel="stylesheet" href="../css/theme.css" type="text/css">
+  </head>
+  <body>
+    <h1>Update SubCategory - By Category</h1>
+      <div>
+        <form action="/subcategories/update" id="updateSubCategory" method="post" name="updateSubCategory">
+          <select name="categoryID" id="categoryID" onchange="load(this)">
+            <option >---</option>
+                {{range .}}
+                    <option value="{{.ID}}">{{.Category}}</option>
+                {{end}}
+              </select>
+          <select name="subcategoryID" id="subcategoryID" style="visibility: hidden;" onchange="setField(this)"></select>
+          Name:<input type="text" name="name" id="name"><br>
+          <button type="submit" form="updateSubCategory" value="Submit">Update</button>
+        </form>
+      </div>
+      <a href="/" class="button">Home</a>
+<script>
+function setField(sel) {
+  document.getElementById("name").setAttribute("value",sel.options[sel.selectedIndex].text);
+}
+//  category = {{.}};
+function load(id) {
+  var x = document.getElementById('subcategoryID');
+  var len = document.getElementById('subcategoryID').length;
+  if (len > 0) {
+    for (i = 0; i < len; i++) {
+      x.remove(i)
+    }
+  }
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange=function() {
+    if (this.readyState == 4 && this.status == 200) {
+      json = JSON.parse(this.responseText);
+      if (json.length == 0){
+        x.style.visibility = 'hidden';
+       // option.text="---";
+       // x.add(option)
+      }else{
+        if (x.style.visibility == 'hidden') {
+          x.style.visibility = 'visible';
+        }
+        opt=document.createElement("option")
+          opt.text="---";
+        x.add(opt);
+        for( index in json ){
+          var option = document.createElement("option");
+          var value = json[index];
+
+          option.text=value.subcategory;
+          option.value=value.id;
+          x.add(option)
+        }
+      }
+    }
+  };
+  xhttp.open("GET", "http://localhost:9000/v1/catagories/" + id.value + "/subcategories", true);
+  xhttp.send();
+}
+</script>
+
+  </body>
+</html>
+

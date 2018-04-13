@@ -29,6 +29,16 @@ func main() {
 	r.HandleFunc("/categories/delete", models.GetDeleteCategory).Methods("GET")
 
 	//SubCategories
+	r.HandleFunc("/subcategories", models.ListSubCategories).Methods("GET")
+	//Create
+	r.HandleFunc("/subcategories/create", models.PostCreateSubCategory).Methods("POST")
+	r.HandleFunc("/subcategories/create", models.GetCreateSubCategory).Methods("GET")
+	//Update
+	r.HandleFunc("/subcategories/update", models.PostUpdateSubCategory).Methods("POST")
+	r.HandleFunc("/subcategories/update", models.GetUpdateSubCategory).Methods("GET")
+	//Delete
+	r.HandleFunc("/subcategories/delete", models.PostDeleteSubCategory).Methods("POST")
+	r.HandleFunc("/subcategories/delete", models.GetDeleteSubCategory).Methods("GET")
 	//
 	//Details
 	//
