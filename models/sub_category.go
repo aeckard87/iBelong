@@ -66,9 +66,9 @@ func (m *SubCategory) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-func descriptorsByDetail(id int64) []SubCategory {
+func subcategoriesByCategory(id int64) []SubCategory {
 	// fmt.Println("ID", id)
-	url := fmt.Sprintf("http://127.0.0.1:9000/v1/catagories/%v/subcategories", id)
+	url := fmt.Sprintf("http://127.0.0.1:9000/v1/categories/%v/subcategories", id)
 	// fmt.Println(url)
 
 	var client http.Client
@@ -145,7 +145,7 @@ func PostCreateSubCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	request_url := fmt.Sprintf("http://localhost:9000/v1/catagories/%s/subcategories", r.PostForm.Get("categoryID"))
+	request_url := fmt.Sprintf("http://localhost:9000/v1/categories/%s/subcategories", r.PostForm.Get("categoryID"))
 	fmt.Println(request_url)
 	req, err := http.NewRequest("POST", request_url, bytes.NewBuffer(b))
 	req.Header.Set("X-Custom-Header", "myvalue")

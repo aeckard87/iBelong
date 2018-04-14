@@ -68,9 +68,9 @@ func (m *Descriptor) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-func subCategoiresByCategory(id int64) []Descriptor {
+func descriptorsByDetail(id int64) []Descriptor {
 	// fmt.Println("ID", id)
-	url := fmt.Sprintf("http://127.0.0.1:9000/v1/catagories/%v/descriptors", id)
+	url := fmt.Sprintf("http://127.0.0.1:9000/v1/details/%v/descriptors", id)
 	// fmt.Println(url)
 
 	var client http.Client
@@ -96,15 +96,15 @@ func subCategoiresByCategory(id int64) []Descriptor {
 }
 
 func ListDescriptors(w http.ResponseWriter, r *http.Request) { //, ps httprouter.Params) {
-	tmpl := template.Must(template.ParseFiles("templates/descriptors/listdescriptorsbycategory.html"))
-	url := "http://localhost:9000/v1/categories"
+	tmpl := template.Must(template.ParseFiles("templates/descriptors/listdescriptorsbydetail.html"))
+	url := "http://localhost:9000/v1/details"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
 		// err
 	}
 	defer resp.Body.Close()
-	var categories []Category
+	var details []Detail
 	if resp.StatusCode == http.StatusOK {
 		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
 		if err2 != nil {
@@ -112,24 +112,24 @@ func ListDescriptors(w http.ResponseWriter, r *http.Request) { //, ps httprouter
 		}
 		// bodyString := string(bodyBytes)
 		// fmt.Println(bodyString)
-		json.Unmarshal(bodyBytes, &categories)
-		tmpl.Execute(w, categories)
+		json.Unmarshal(bodyBytes, &details)
+		tmpl.Execute(w, details)
 	} else {
-		tmpl.Execute(w, categories)
+		tmpl.Execute(w, details)
 	}
 }
 
 func GetCreateDescriptor(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("GET Descriptor/Create")
-	categories := GetCategories()
+	details := GetDetails()
 	// tmpl := template.Must(template.ParseFiles("templates/descriptors/createDescriptor.html"))
 	tmpl, err := template.New("createDescriptor.html").Funcs(template.FuncMap{
-		"subcatByCat": subCategoiresByCategory,
+		"subcatByCat": descriptorsByDetail,
 	}).ParseFiles("templates/descriptors/createDescriptor.html")
 	if err != nil {
 		fmt.Println(err)
 	}
-	tmpl.Execute(w, categories)
+	tmpl.Execute(w, details)
 }
 
 func PostCreateDescriptor(w http.ResponseWriter, r *http.Request) {
@@ -147,7 +147,7 @@ func PostCreateDescriptor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	request_url := fmt.Sprintf("http://localhost:9000/v1/catagories/%s/descriptors", r.PostForm.Get("categoryID"))
+	request_url := fmt.Sprintf("http://localhost:9000/v1/details/%s/descriptors", r.PostForm.Get("detailID"))
 	fmt.Println(request_url)
 	req, err := http.NewRequest("POST", request_url, bytes.NewBuffer(b))
 	req.Header.Set("X-Custom-Header", "myvalue")
@@ -171,14 +171,14 @@ func PostCreateDescriptor(w http.ResponseWriter, r *http.Request) {
 
 func GetDeleteDescriptor(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.ParseFiles("templates/descriptors/deleteDescriptor.html"))
-	url := "http://localhost:9000/v1/categories"
+	url := "http://localhost:9000/v1/details"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
 		// err
 	}
 	defer resp.Body.Close()
-	var categories []Category
+	var details []Detail
 	if resp.StatusCode == http.StatusOK {
 		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
 		if err2 != nil {
@@ -186,10 +186,10 @@ func GetDeleteDescriptor(w http.ResponseWriter, r *http.Request) {
 		}
 		// bodyString := string(bodyBytes)
 		// fmt.Println(bodyString)
-		json.Unmarshal(bodyBytes, &categories)
-		tmpl.Execute(w, categories)
+		json.Unmarshal(bodyBytes, &details)
+		tmpl.Execute(w, details)
 	} else {
-		tmpl.Execute(w, categories)
+		tmpl.Execute(w, details)
 	}
 }
 
@@ -221,14 +221,14 @@ func PostDeleteDescriptor(w http.ResponseWriter, r *http.Request) {
 
 func GetUpdateDescriptor(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.ParseFiles("templates/descriptors/updateDescriptor.html"))
-	url := "http://localhost:9000/v1/categories"
+	url := "http://localhost:9000/v1/details"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
 		// err
 	}
 	defer resp.Body.Close()
-	var categories []Category
+	var details []Detail
 	if resp.StatusCode == http.StatusOK {
 		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
 		if err2 != nil {
@@ -236,15 +236,15 @@ func GetUpdateDescriptor(w http.ResponseWriter, r *http.Request) {
 		}
 		// bodyString := string(bodyBytes)
 		// fmt.Println(bodyString)
-		json.Unmarshal(bodyBytes, &categories)
-		tmpl.Execute(w, categories)
+		json.Unmarshal(bodyBytes, &details)
+		tmpl.Execute(w, details)
 	} else {
-		tmpl.Execute(w, categories)
+		tmpl.Execute(w, details)
 	}
 }
 
 func PostUpdateDescriptor(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("POST Category/Update")
+	fmt.Println("POST Detail/Update")
 	var descriptor Descriptor
 	err := r.ParseForm()
 	if err != nil {

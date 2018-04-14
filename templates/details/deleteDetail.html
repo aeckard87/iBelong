@@ -1,13 +1,13 @@
 <!-- <h1>-Delete-</h1> -->
-<!-- <form action="/categories/delete" id="deleteCategory" method="post" name="deleteCategory"> -->
-<!--       <h3>Categories</h3> -->
-<!--       <select name="categoryID" id="categoryID"> -->
+<!-- <form action="/details/delete" id="deleteDetail" method="post" name="deleteDetail"> -->
+<!--       <h3>Details</h3> -->
+<!--       <select name="detailID" id="detailID"> -->
 <!--         {{range .}} -->
-<!--             <option value="{{.ID}}">{{.Category}}</option> -->
+<!--             <option value="{{.ID}}">{{.Detail}}</option> -->
 <!--         {{end}} -->
 <!--       </select> -->
-<!--       <1!-- <a href="#" onclick="document.deleteCategory.submit()">Delete</a> --1> -->
-<!--       <button type="submit" form="deleteCategory" value="Submit">Delete</button> -->
+<!--       <1!-- <a href="#" onclick="document.deleteDetail.submit()">Delete</a> --1> -->
+<!--       <button type="submit" form="deleteDetail" value="Submit">Delete</button> -->
 <!-- </form> -->
 <!-- <form action="/"> -->
 <!--     <input type="submit" value="Home" /> -->
@@ -19,23 +19,22 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>iBelong - Delete Category</title>
+    <title>iBelong - Delete Detail</title>
     <link rel="stylesheet" href="../css/theme.css" type="text/css">
   </head>
   <body>
-    <h1>Delete Category</h1>
+    <h1>Delete Detail</h1>
       <div>
-        <form action="/categories/delete" id="deleteCategory" method="post" name="deleteCategory">
-              <select name="categoryID" id="categoryID">
+        <form action="/details/delete" id="deleteDetail" method="post" name="deleteDetail">
+              <select name="detailID" id="detailID">
                 {{range .}}
-                    <option value="{{.ID}}">{{.Category}}</option>
+                    <option value="{{.ID}}">{{.Detail}}</option>
                 {{end}}
               </select>
-              <!-- <a href="#" onclick="document.deleteCategory.submit()">Delete</a> -->
-              <button type="submit" form="deleteCategory" value="Submit">Delete</button>
+              <!-- <a href="#" onclick="document.deleteDetail.submit()">Delete</a> -->
+              <button type="submit" form="deleteDetail" value="Submit">Delete</button>
         </form>
       </div>
       <a href="/" class="button">Home</a>
   </body>
 </html>
-

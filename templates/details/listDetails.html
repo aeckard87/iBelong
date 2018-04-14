@@ -3,20 +3,20 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>iBelong - Categories</title>
+    <title>iBelong - Details</title>
     <link rel="stylesheet" href="css/theme.css" type="text/css">
   </head>
   <body>
-    <h1>Categories</h1>
+    <h1>Details</h1>
       <div>
         <ul>
         {{range .}}
-                <li>{{.Category}}</li>
+                <li>{{.Detail}}</li>
         {{end}}
         </ul>
-      <a href="/categories/create" class="button">Add</a>
-      <a href="/categories/update" class="button">Edit</a>
-      <a href="/categories/delete" class="button">Delete</a>
+      <a href="/details/create" class="button">Add</a>
+      <a href="/details/update" class="button">Edit</a>
+      <a href="/details/delete" class="button">Delete</a>
       </div>
       <a href="/" class="button">Home</a>
   </body>

@@ -3,25 +3,25 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>iBelong - SubCategories</title>
+    <title>iBelong - Descriptors</title>
     <link rel="stylesheet" href="css/theme.css" type="text/css">
   </head>
   <body>
-    <h1>SubCategories - By Category</h1>
+    <h1>Descriptors - By Detail</h1>
       <div>
         <ul>
         {{range .}}
-                <li value="{{.ID}}" onclick="load(this)">{{.Category}}
+                <li value="{{.ID}}" onclick="load(this)">{{.Detail}}
                 <ul id="{{.ID}}" value="false"></ul></li>
         {{end}}
         </ul>
-      <a href="/subcategories/create" class="button">Add</a>
-      <a href="/subcategories/update" class="button">Edit</a>
-      <a href="/subcategories/delete" class="button">Delete</a>
+      <a href="/descriptors/create" class="button">Add</a>
+      <a href="/descriptors/update" class="button">Edit</a>
+      <a href="/descriptors/delete" class="button">Delete</a>
       </div>
       <a href="/" class="button">Home</a>
 <script>
-//  category = {{.}};
+//  detail = {{.}};
 function load(id) {
   if (document.getElementById(id.value).value == "true") {
       document.getElementById(id.value).innerHTML = "";
@@ -34,20 +34,20 @@ function load(id) {
         json = JSON.parse(this.responseText);
         if (json.length == 0){
           document.getElementById(id.value).value="true";
-          document.getElementById(id.value).innerHTML = '<p>No Subcategories for selected Category exist.';
+          document.getElementById(id.value).innerHTML = '<p>No Descriptors for selected Detail exist.';
         }else{
           document.getElementById(id.value).value="true";
           var list = document.getElementById(id.value);
           for( index in json ){
             var value = json[index];
             var entry = document.createElement('li');
-            entry.appendChild(document.createTextNode(value.subcategory));
+            entry.appendChild(document.createTextNode(value.descriptor));
             list.appendChild(entry);
           }
         }
       }
     };
-    xhttp.open("GET", "http://localhost:9000/v1/catagories/" + id.value + "/subcategories", true);
+    xhttp.open("GET", "http://localhost:9000/v1/details/" + id.value + "/descriptors", true);
     xhttp.send();
   }
 }

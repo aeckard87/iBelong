@@ -2,22 +2,22 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>iBelong - Create SubCategory</title>
+    <title>iBelong - Create Descriptor</title>
     <link rel="stylesheet" href="../css/theme.css" type="text/css">
   </head>
   <body>
-    <h1>Create SubCategory</h1>
+    <h1>Create Descriptor</h1>
         <div>
-        <form action="/subcategories/create" id="createSubCategory" method="post" name="createSubCategory">
-              <select name="categoryID" id="categoryID" onchange="unlock(this)">
+        <form action="/descriptors/create" id="createDescriptor" method="post" name="createDescriptor">
+              <select name="detailID" id="detailID" onchange="unlock(this)">
                     <option value="empty">---</option>
                 {{range .}}
-                <option value="{{.ID}}">{{.Category}}</option>
+                <option value="{{.ID}}">{{.Detail}}</option>
                 {{end}}
               </select>
-            Name:<input type="text" name="name" id="name" value="Must Select Category" disabled><br>
-          <!-- <a href="#" onclick="document.createSubCategory.submit()">Submit</a> -->
-          <button type="submit" form="createSubCategory" value="Submit">Create</button>
+            Name:<input type="text" name="name" id="name" value="Must Select Detail" disabled><br>
+          <!-- <a href="#" onclick="document.createDescriptor.submit()">Submit</a> -->
+          <button type="submit" form="createDescriptor" value="Submit">Create</button>
           </form>
           <div id="devSubCat"></div>
         </div>
@@ -31,7 +31,7 @@
         loadDoc(sel.value)
 
       } else {
-      document.getElementById("name").setAttribute("value","Must Select Category");
+      document.getElementById("name").setAttribute("value","Must Select Detail");
       document.getElementById("name").disabled = true;
       document.getElementById("devSubCat").innerHTML = "";
       }
@@ -49,21 +49,21 @@ function loadDoc(id) {
     if (this.readyState == 4 && this.status == 200) {
       json = JSON.parse(this.responseText);
       if (json.length == 0){
-        document.getElementById("devSubCat").innerHTML = '<p>No Subcategories for selected Category exist. You should add one!';
+        document.getElementById("devSubCat").innerHTML = '<p>No Descriptors for selected Detail exist. You should add one!';
       }else{
         document.getElementById("devSubCat").innerHTML = "";
-        document.getElementById("devSubCat").innerHTML = '<p>SubCategories in selected Category:</p><ol id="demo"></ol>';
+        document.getElementById("devSubCat").innerHTML = '<p>Descriptors in selected Detail:</p><ol id="demo"></ol>';
         var list = document.getElementById('demo');
         for( index in json ){
           var value = json[index];
           var entry = document.createElement('li');
-          entry.appendChild(document.createTextNode(value.subcategory));
+          entry.appendChild(document.createTextNode(value.descriptor));
           list.appendChild(entry);
         }
       }
     }
   };
-  xhttp.open("GET", "http://localhost:9000/v1/catagories/" + id + "/subcategories", true);
+  xhttp.open("GET", "http://localhost:9000/v1/details/" + id + "/descriptors", true);
   xhttp.send();
 }
 

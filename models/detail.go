@@ -15,7 +15,6 @@ import (
 
 	"github.com/aeckard87/WornOut/models"
 	strfmt "github.com/go-openapi/strfmt"
-	"github.com/gorilla/mux"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
@@ -127,8 +126,7 @@ func PostCreateDetail(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(resp.Body)
 	fmt.Println("response Body:", string(body))
 
-	// ListDetails(w, r, ps)
-	ListDetails(w, r)
+	http.Redirect(w, r, "http://localhost:8100/details", 301)
 
 }
 
@@ -173,38 +171,6 @@ func PostUpdateDetail(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, "http://localhost:8100/details", 301)
 
-}
-
-//Not working as expected
-func ListDetail(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id := vars["ID"]
-
-	tmpl := template.Must(template.ParseFiles("templates/details/listDetail.html"))
-	url := fmt.Sprintf("http://localhost:9000/v1/details/%v", id)
-	fmt.Println("URL", url)
-
-	var client http.Client
-	resp, err := client.Get(url)
-	if err != nil {
-		// err
-	}
-	defer resp.Body.Close()
-
-	var details Detail
-	if resp.StatusCode == http.StatusOK {
-		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
-		if err2 != nil {
-			fmt.Println(err2)
-		}
-		bodyString := string(bodyBytes)
-		fmt.Println(bodyString)
-		json.Unmarshal(bodyBytes, &details)
-		fmt.Println("Unmarshaled", details)
-		tmpl.Execute(w, details)
-	} else {
-		tmpl.Execute(w, details)
-	}
 }
 
 func ListDetails(w http.ResponseWriter, r *http.Request) { //, ps httprouter.Params) {

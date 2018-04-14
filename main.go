@@ -17,7 +17,6 @@ func main() {
 
 	//Categories
 	r.HandleFunc("/categories", models.ListCategories).Methods("GET")
-	// r.HandleFunc("/categories/{ID}", models.ListCategory).Methods("GET")
 	//Create
 	r.HandleFunc("/categories/create", models.PostCreateCategory).Methods("POST")
 	r.HandleFunc("/categories/create", models.GetCreateCategory).Methods("GET")
@@ -40,10 +39,33 @@ func main() {
 	r.HandleFunc("/subcategories/delete", models.PostDeleteSubCategory).Methods("POST")
 	r.HandleFunc("/subcategories/delete", models.GetDeleteSubCategory).Methods("GET")
 	//
+
 	//Details
+	r.HandleFunc("/details", models.ListDetails).Methods("GET")
+	//Create
+	r.HandleFunc("/details/create", models.PostCreateDetail).Methods("POST")
+	r.HandleFunc("/details/create", models.GetCreateDetail).Methods("GET")
+	//Update
+	r.HandleFunc("/details/update", models.PostUpdateDetail).Methods("POST")
+	r.HandleFunc("/details/update", models.GetUpdateDetail).Methods("GET")
+	//Delete
+	r.HandleFunc("/details/delete", models.PostDeleteDetail).Methods("POST")
+	r.HandleFunc("/details/delete", models.GetDeleteDetail).Methods("GET")
 	//
+
 	//Descriptors
+	r.HandleFunc("/descriptors", models.ListDescriptors).Methods("GET")
+	//Create
+	r.HandleFunc("/descriptors/create", models.PostCreateDescriptor).Methods("POST")
+	r.HandleFunc("/descriptors/create", models.GetCreateDescriptor).Methods("GET")
+	//Update
+	r.HandleFunc("/descriptors/update", models.PostUpdateDescriptor).Methods("POST")
+	r.HandleFunc("/descriptors/update", models.GetUpdateDescriptor).Methods("GET")
+	//Delete
+	r.HandleFunc("/descriptors/delete", models.PostDeleteDescriptor).Methods("POST")
+	r.HandleFunc("/descriptors/delete", models.GetDeleteDescriptor).Methods("GET")
 	//
+
 	//Users
 	r.HandleFunc("/users", models.GetListUsers)
 	r.HandleFunc("/users/{ID}/items", models.ItemsByOwner).Methods("GET")
