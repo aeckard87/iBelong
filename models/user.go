@@ -100,3 +100,75 @@ func GetListUsers(w http.ResponseWriter, r *http.Request) {
 		usersTmpl.Execute(w, users)
 	}
 }
+
+func GetCreateUser(w http.ResponseWriter, r *http.Request) {
+	usersTmpl := template.Must(template.ParseFiles("templates/users/createUser.html"))
+	url := "http://localhost:9000/v1/users"
+	var client http.Client
+	resp, err := client.Get(url)
+	if err != nil {
+		// err
+	}
+	defer resp.Body.Close()
+	var users []User
+	if resp.StatusCode == http.StatusOK {
+		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
+		if err2 != nil {
+			fmt.Println(err2)
+		}
+		// bodyString := string(bodyBytes)
+		// fmt.Println(bodyString)
+		json.Unmarshal(bodyBytes, &users)
+		usersTmpl.Execute(w, users)
+	} else {
+		usersTmpl.Execute(w, users)
+	}
+}
+
+func GetUpdateUser(w http.ResponseWriter, r *http.Request) {
+	usersTmpl := template.Must(template.ParseFiles("templates/users/updateUser.html"))
+	url := "http://localhost:9000/v1/users"
+	var client http.Client
+	resp, err := client.Get(url)
+	if err != nil {
+		// err
+	}
+	defer resp.Body.Close()
+	var users []User
+	if resp.StatusCode == http.StatusOK {
+		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
+		if err2 != nil {
+			fmt.Println(err2)
+		}
+		// bodyString := string(bodyBytes)
+		// fmt.Println(bodyString)
+		json.Unmarshal(bodyBytes, &users)
+		usersTmpl.Execute(w, users)
+	} else {
+		usersTmpl.Execute(w, users)
+	}
+}
+
+func GetDeleteUser(w http.ResponseWriter, r *http.Request) {
+	usersTmpl := template.Must(template.ParseFiles("templates/users/deleteUser.html"))
+	url := "http://localhost:9000/v1/users"
+	var client http.Client
+	resp, err := client.Get(url)
+	if err != nil {
+		// err
+	}
+	defer resp.Body.Close()
+	var users []User
+	if resp.StatusCode == http.StatusOK {
+		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
+		if err2 != nil {
+			fmt.Println(err2)
+		}
+		// bodyString := string(bodyBytes)
+		// fmt.Println(bodyString)
+		json.Unmarshal(bodyBytes, &users)
+		usersTmpl.Execute(w, users)
+	} else {
+		usersTmpl.Execute(w, users)
+	}
+}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>iBelong - {{.Username}}</title>
+    <link rel="stylesheet" href="../../css/theme.css" type="text/css">
+  </head>
+  <body>
+    <h1>{{.FirstName}}'s Profile</h1>
+      <div>
+        First name: <input type="text" name="firstName" disabled value="{{.FirstName}}"><br>
+        Last name: <input type="text" name="lastName" disabled value="{{.LastName}}"><br>
+        UserName: <input type="text" name="username" disabled value="{{.Username}}"><br>
+        Email: <input type="text" name="email" disabled value="{{.Email}}"><br>
+        <div>
+          <h2>Items</h2>
+            {{if .Items -}}
+                {{- range .Items}}
+                  <!-- <li>{{.Name}}</li> -->
+                  <a href="" class="button" onclick="itemDetails(this)" value="{{.ID}}">{{.Name}}</a><br>
+                {{end}}
+            {{- else}}
+            No Items Found.
+            {{- end}}
+        </div>
+      </div>
+      <a href="/" class="button">Home</a>
+
+  <script>
+
+    function itemDetails(sel){
+      console.log("what is sel?" + sel)
+      console.log("IDK?")
+    }
+
+  </script>
+  </body>
+</html>
+

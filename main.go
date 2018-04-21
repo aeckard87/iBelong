@@ -15,6 +15,8 @@ func main() {
 	// r.HandleFunc("/load/{dataId}", Load)
 	r.HandleFunc("/", index)
 
+	r.HandleFunc("/settings", settings)
+
 	//Categories
 	r.HandleFunc("/categories", models.ListCategories).Methods("GET")
 	//Create
@@ -68,7 +70,17 @@ func main() {
 
 	//Users
 	r.HandleFunc("/users", models.GetListUsers)
-	r.HandleFunc("/users/{ID}/items", models.ItemsByOwner).Methods("GET")
+	r.HandleFunc("/users/{id:[0-9]+}", models.ItemsByOwner).Methods("GET").PathPrefix("/items")
+	r.HandleFunc("/users/{id:[0-9]+}", models.GetUser).Methods("GET")
+	//Create
+	// r.HandleFunc("/users/create/", models.PostCreateDescriptor).Methods("POST")
+	r.HandleFunc("/users/create", models.GetCreateUser).Methods("GET")
+	//Update
+	// r.HandleFunc("/users/update/", models.PostUpdateDescriptor).Methods("POST")
+	r.HandleFunc("/users/update", models.GetUpdateUser).Methods("GET")
+	//Delete
+	// r.HandleFunc("/users/delete/", models.PostDeleteDescriptor).Methods("POST")
+	r.HandleFunc("/users/delete", models.GetDeleteUser).Methods("GET")
 
 	//Items
 	r.HandleFunc("/items", models.GetListItems).Methods("GET")
@@ -111,5 +123,9 @@ func main() {
 
 func index(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.ParseFiles("templates/index.html"))
+	tmpl.Execute(w, nil)
+}
+func settings(w http.ResponseWriter, r *http.Request) {
+	tmpl := template.Must(template.ParseFiles("templates/settings/index.html"))
 	tmpl.Execute(w, nil)
 }
