@@ -1,41 +1,56 @@
-<!-- <h1>-Delete-</h1> -->
-<!-- <form action="/categories/delete" id="deleteCategory" method="post" name="deleteCategory"> -->
-<!--       <h3>Categories</h3> -->
-<!--       <select name="categoryID" id="categoryID"> -->
-<!--         {{range .}} -->
-<!--             <option value="{{.ID}}">{{.Category}}</option> -->
-<!--         {{end}} -->
-<!--       </select> -->
-<!--       <1!-- <a href="#" onclick="document.deleteCategory.submit()">Delete</a> --1> -->
-<!--       <button type="submit" form="deleteCategory" value="Submit">Delete</button> -->
-<!-- </form> -->
-<!-- <form action="/"> -->
-<!--     <input type="submit" value="Home" /> -->
-<!-- </form> -->
-
-
-
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iBelong - Delete Category</title>
-    <link rel="stylesheet" href="../css/theme.css" type="text/css">
+    <link rel="stylesheet" href="/css/pure/pure.css">
+    <link rel="stylesheet" href="/css/pure-layout-side-menu/side-menu.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
   </head>
   <body>
-    <h1>Delete Category</h1>
-      <div>
-        <form action="/categories/delete" id="deleteCategory" method="post" name="deleteCategory">
+
+    <div id="layout">
+      <a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+      </a>
+      <div id="menu">
+        <div class="pure-menu custom-restricted-width">
+          <a class="pure-menu-heading" href="#">iBelong</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"><a href="/" class="pure-menu-link"><i class="fas fa-home fa-3x"></i></a></li>
+            <li class="pure-menu-item"><a href="/users" class="pure-menu-link"><i class="fas fa-users fa-3x"></i></a></li>
+            <li class="pure-menu-item"><a href="#" class="pure-menu-link"><i class="fas fa-qrcode fa-3x"></i></a></li>
+            <li class="pure-menu-item"><a href="/settings" class="pure-menu-link"><i class="fas fa-cog fa-3x"></i></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="main">
+      <div class="header">
+        <h1><i class="fas fa-minus"></i> Category</h1>
+      </div>
+      <div id="content">
+        <form class="pure-form pure-form-stacked" action="/categories/delete" id="deleteCategory" method="post" name="deleteCategory">
+            <fieldset>
+              <label form="categoryID">Select Category to Remove</label>
               <select name="categoryID" id="categoryID">
                 {{range .}}
                     <option value="{{.ID}}">{{.Category}}</option>
                 {{end}}
               </select>
-              <!-- <a href="#" onclick="document.deleteCategory.submit()">Delete</a> -->
-              <button type="submit" form="deleteCategory" value="Submit">Delete</button>
+
+              <button class="pure-button pure-button-primary" type="submit" form="deleteCategory" value="Submit">Remove</button>
+            </fieldset>
         </form>
       </div>
-      <a href="/" class="button">Home</a>
+    </div>
+
+  </div>
+  <script src="/js/pure-layout-side-menu/ui.js"></script>
+  <script src="/js/pure-dropdown-menu/menus.js"></script>
   </body>
 </html>
+
 

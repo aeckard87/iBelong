@@ -2,27 +2,60 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>iBelong - Update Category</title>
-    <link rel="stylesheet" href="../css/theme.css" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iBelong - Edit Category</title>
+    <link rel="stylesheet" href="/css/pure/pure.css">
+    <link rel="stylesheet" href="/css/pure-layout-side-menu/side-menu.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
   </head>
   <body>
-    <h1>Update Category</h1>
-      <div>
-        <form action="/categories/update" id="updateCategory" method="post" name="updateCategory">
+
+    <div id="layout">
+      <a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+      </a>
+      <div id="menu">
+        <div class="pure-menu custom-restricted-width">
+          <a class="pure-menu-heading" href="#">iBelong</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"><a href="/" class="pure-menu-link"><i class="fas fa-home fa-3x"></i></a></li>
+            <li class="pure-menu-item"><a href="/users" class="pure-menu-link"><i class="fas fa-users fa-3x"></i></a></li>
+            <li class="pure-menu-item"><a href="#" class="pure-menu-link"><i class="fas fa-qrcode fa-3x"></i></a></li>
+            <li class="pure-menu-item"><a href="/settings" class="pure-menu-link"><i class="fas fa-cog fa-3x"></i></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="main">
+      <div class="header">
+        <h1><i class="fas fa-edit"></i> Categories</h1>
+      </div>
+      <div id="content">
+        <form class="pure-form pure-form-stacked" action="/categories/update" id="updateCategory" method="post" name="updateCategory">
+            <fieldset>
+              <label form="categoryID">Select Category to Edit</label>
               <select name="categoryID" id="categoryID" onchange="setField(this)">
                 <option value="">---</option>
                 {{range .}}
                     <option value="{{.ID}}">{{.Category}}</option>
                 {{end}}
               </select>
-              <!-- <a href="#" onclick="document.deleteCategory.submit()">Delete</a> -->
-              Name:<input type="text" name="name" id="name"><br>
-              <button type="submit" form="updateCategory" value="Submit">Update</button>
+
+              <br>
+
+              <label for="name">New Category's Name</label>
+              <input type="text" placeholder="Tops" name="name" id="name">
+
+              <button class="pure-button pure-button-primary" type="submit" form="updateCategory" value="Submit">Save</button>
+            </fieldset>
         </form>
       </div>
-      <a href="/" class="button">Home</a>
+    </div>
 
-
+  </div>
+  <script src="/js/pure-layout-side-menu/ui.js"></script>
+  <script src="/js/pure-dropdown-menu/menus.js"></script>
   <script>
     function setField(sel) {
       document.getElementById("name").setAttribute("value",sel.options[sel.selectedIndex].text);

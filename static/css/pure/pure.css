@@ -1506,3 +1506,11 @@ striping:
 .pure-table-horizontal tbody > tr:last-child > td {
     border-bottom-width: 0;
 }
+
+
+/* My Own Additions */
+.center {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+}
