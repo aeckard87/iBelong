@@ -35,23 +35,22 @@
       <div id="content" class="center">
         <form class="pure-form pure-form-stacked" action="/subcategories/delete" id="deleteSubCategory" method="post" name="deleteSubCategory">
             <fieldset>
-              <label form="categoryID">Select Category where SubCategory resides:</label>
+              <label form="categoryID">Category where SubCategory resides:</label>
               <select name="categoryID" id="categoryID" onchange="load(this)">
                 <option >---</option>
                 {{range .}}
                     <option value="{{.ID}}">{{.Category}}</option>
                 {{end}}
               </select>
-
               <br>
-              <label form="subcategoryID" id="subcatLabel" name="subcatLabel" style="visibility: hidden;">Subcategory to be removed:</label>
+              <label form="subcategoryID" id="subcatLabel" name="subcatLabel" style="visibility: hidden;">SubCategory to be removed:</label>
               <select name="subcategoryID" id="subcategoryID" style="visibility: hidden;"></select>
 
               <button class="pure-button pure-button-primary" type="submit" form="deleteSubCategory" value="Submit" onclick="notify()">Remove</button>
             </fieldset>
         </form>
 
-        <br><hr><button class="pure-button pure-button-primary" onclick="goBack()"><i class="fas fa-long-arrow-alt-left"> Go Back</i></button>
+        <br><hr><button class="pure-button pure-button-primary" onclick="goBack()"><i class="fas fa-long-arrow-alt-left">Go Back</i></button>
 
       </div>
     </div>
@@ -81,11 +80,13 @@
           json = JSON.parse(this.responseText);
           if (json.length == 0){
             x.style.visibility = 'hidden';
+            document.getElementById('subcatLabel').style.visibility = 'hidden'
            // option.text="---";
            // x.add(option)
           }else{
             if (x.style.visibility == 'hidden') {
               x.style.visibility = 'visible';
+              document.getElementById('subcatLabel').style.visibility = 'visible'
             }
             for( index in json ){
               var option = document.createElement("option");
