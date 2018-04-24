@@ -163,7 +163,7 @@ func PostCreateSubCategory(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(resp.Body)
 	fmt.Println("response Body:", string(body))
 
-	GetCreateSubCategory(w, r)
+	ListSubCategories(w, r)
 
 }
 

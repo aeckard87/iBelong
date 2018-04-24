@@ -31,7 +31,7 @@
       <div class="header">
         <h1><i class="fas fa-plus"></i> Category</h1>
       </div>
-      <div id="content">
+      <div id="content" class="center">
         <form class="pure-form pure-form-stacked" action="/categories/create" id="createCategory" method="post" name="createCategory">
             <fieldset>
                 <label for="name">Category's Name</label>
@@ -39,11 +39,19 @@
                 <button class="pure-button pure-button-primary" type="submit" form="createCategory" value="Submit">Create</button>
             </fieldset>
         </form>
+
+        <br><hr><button class="pure-button pure-button-primary" onclick="goBack()"><i class="fas fa-long-arrow-alt-left"> Go Back</i></button>
+
       </div>
     </div>
 
   </div>
   <script src="/js/pure-layout-side-menu/ui.js"></script>
   <script src="/js/pure-dropdown-menu/menus.js"></script>
+  <script>
+  function goBack() {
+      window.history.back();
+  }
+  </script>
   </body>
 </html>

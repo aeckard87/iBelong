@@ -31,28 +31,32 @@
       <div class="header">
         <h1><i class="fas fa-list-ul"></i> Categories</h1>
       </div>
-      <div id="content">
-        <div class="pure-g">
-          <ul>
-          {{range .}}
-            <div class="pure-u-1-2">
-              <div class="l-box">
-                <li>{{.Category}}</li>
-              </div>
-            </div>
-          {{end}}
-          </ul>
-        </div>
-        <div style="text-align: center;">
+      <div id="content" class="center">
+        <div>
           <a href="/categories/create" class="pure-button"><i class="fas fa-plus"></i></a>
           <a href="/categories/update" class="pure-button"><i class="fas fa-edit"></i></a>
           <a href="/categories/delete" class="pure-button"><i class="fas fa-minus"></i></a>
         </div>
+        <div>
+          <ul>
+          {{range .}}
+                <li>{{.Category}}</li>
+          {{end}}
+          </ul>
+        </div>
+
+        <br><hr><button class="pure-button pure-button-primary" onclick="goBack()"><i class="fas fa-long-arrow-alt-left"> Go Back</i></button>
+
       </div>
     </div>
 
   </div>
   <script src="/js/pure-layout-side-menu/ui.js"></script>
   <script src="/js/pure-dropdown-menu/menus.js"></script>
+  <script>
+  function goBack() {
+      window.history.back();
+  }
+  </script>
   </body>
 </html>

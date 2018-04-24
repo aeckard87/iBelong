@@ -31,7 +31,7 @@
       <div class="header">
         <h1><i class="fas fa-minus"></i> Category</h1>
       </div>
-      <div id="content">
+      <div id="content" class="center">
         <form class="pure-form pure-form-stacked" action="/categories/delete" id="deleteCategory" method="post" name="deleteCategory">
             <fieldset>
               <label form="categoryID">Select Category to Remove</label>
@@ -41,15 +41,28 @@
                 {{end}}
               </select>
 
-              <button class="pure-button pure-button-primary" type="submit" form="deleteCategory" value="Submit">Remove</button>
+              <button class="pure-button pure-button-primary" type="submit" form="deleteCategory" value="Submit" onclick="notify()">Remove</button>
             </fieldset>
         </form>
+
+        <br><hr><button class="pure-button pure-button-primary" onclick="goBack()"><i class="fas fa-long-arrow-alt-left"> Go Back</i></button>
+
       </div>
     </div>
 
   </div>
   <script src="/js/pure-layout-side-menu/ui.js"></script>
   <script src="/js/pure-dropdown-menu/menus.js"></script>
+  <script>
+    function notify(){
+      var e = document.getElementById("categoryID");
+      var cat = e.options[e.selectedIndex].text;
+      alert( cat + " has been removed, along with any Subcategory relations!");
+    }
+  function goBack() {
+      window.history.back();
+  }
+  </script>
   </body>
 </html>
 

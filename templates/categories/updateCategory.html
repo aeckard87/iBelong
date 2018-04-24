@@ -31,7 +31,7 @@
       <div class="header">
         <h1><i class="fas fa-edit"></i> Categories</h1>
       </div>
-      <div id="content">
+      <div id="content" class="center">
         <form class="pure-form pure-form-stacked" action="/categories/update" id="updateCategory" method="post" name="updateCategory">
             <fieldset>
               <label form="categoryID">Select Category to Edit</label>
@@ -50,6 +50,9 @@
               <button class="pure-button pure-button-primary" type="submit" form="updateCategory" value="Submit">Save</button>
             </fieldset>
         </form>
+
+        <br><hr><button class="pure-button pure-button-primary" onclick="goBack()"><i class="fas fa-long-arrow-alt-left"> Go Back</i></button>
+
       </div>
     </div>
 
@@ -60,6 +63,9 @@
     function setField(sel) {
       document.getElementById("name").setAttribute("value",sel.options[sel.selectedIndex].text);
     }
+  function goBack() {
+      window.history.back();
+  }
     </script>
   </body>
 </html>

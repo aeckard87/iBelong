@@ -2,72 +2,121 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iBelong - Create SubCategory</title>
-    <link rel="stylesheet" href="../css/theme.css" type="text/css">
+    <link rel="stylesheet" href="/css/pure/pure.css">
+    <link rel="stylesheet" href="/css/pure-layout-side-menu/side-menu.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
   </head>
   <body>
-    <h1>Create SubCategory</h1>
-        <div>
-        <form action="/subcategories/create" id="createSubCategory" method="post" name="createSubCategory">
+
+    <div id="layout">
+      <a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+      </a>
+      <div id="menu">
+        <div class="pure-menu custom-restricted-width">
+          <a class="pure-menu-heading" href="#">iBelong</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"><a href="/" class="pure-menu-link"><i class="fas fa-home fa-3x"></i></a></li>
+            <li class="pure-menu-item"><a href="/users" class="pure-menu-link"><i class="fas fa-users fa-3x"></i></a></li>
+            <li class="pure-menu-item"><a href="#" class="pure-menu-link"><i class="fas fa-qrcode fa-3x"></i></a></li>
+            <li class="pure-menu-item"><a href="/settings" class="pure-menu-link"><i class="fas fa-cog fa-3x"></i></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="main">
+      <div class="header">
+        <h1><i class="fas fa-plus"></i> SubCategory</h1>
+      </div>
+      <div id="content" class="center">
+        <form class="pure-form pure-form-stacked" action="/subcategories/create" id="createSubCategory" method="post" name="createSubCategory">
+            <fieldset>
+
+              <label for="categoryID">Select Category</label>
               <select name="categoryID" id="categoryID" onchange="unlock(this)">
-                    <option value="empty">---</option>
+                  <option value="empty">---</option>
                 {{range .}}
-                <option value="{{.ID}}">{{.Category}}</option>
+                  <option value="{{.ID}}">{{.Category}}</option>
                 {{end}}
               </select>
-            Name:<input type="text" name="name" id="name" value="Must Select Category" disabled><br>
-          <!-- <a href="#" onclick="document.createSubCategory.submit()">Submit</a> -->
-          <button type="submit" form="createSubCategory" value="Submit">Create</button>
-          </form>
-          <div id="devSubCat"></div>
-        </div>
-    <a href="/" class="button">Home</a>
 
-<script>
-    function unlock(sel) {
-      if (sel.selectedIndex != 0) {
-      document.getElementById("name").disabled = false;
-      document.getElementById("name").setAttribute("value", "");
+              <br>
+
+              <label for="name">SubCategory's Name</label>
+              <input type="text" name="name" id="name" value="Must Select Category" placeholder="Name" disabled><br>
+
+              <button class="pure-button pure-button-primary" type="submit" form="createSubCategory" value="Submit" onclick="notify()">Create</button>
+
+            </fieldset>
+        </form>
+          <div id="devSubCat" name="devSubCat"></div>
+
+        <br><hr><button class="pure-button pure-button-primary" onclick="goBack()"><i class="fas fa-long-arrow-alt-left"> Go Back</i></button>
+
+      </div>
+    </div>
+
+  </div>
+  <script src="/js/pure-layout-side-menu/ui.js"></script>
+  <script src="/js/pure-dropdown-menu/menus.js"></script>
+  <script>
+    function notify(){
+      var e = document.getElementById("categoryID");
+      var cat = e.options[e.selectedIndex].text;
+      var subcat = document.getElementById('name').value;
+      alert(subcat + " has been added to " + cat + ".");
+    }
+      function unlock(sel) {
+        if (sel.selectedIndex != 0) {
+        document.getElementById("name").disabled = false;
+        document.getElementById("name").setAttribute("value", "");
         loadDoc(sel.value)
 
-      } else {
-      document.getElementById("name").setAttribute("value","Must Select Category");
-      document.getElementById("name").disabled = true;
-      document.getElementById("devSubCat").innerHTML = "";
-      }
-    }
-
-    function function1() {
-      var ul = document.getElementById("list");
-      var li = document.createElement("li");
-      li.appendChild(document.createTextNode("Four"));
-      ul.appendChild(li);
-    }
-function loadDoc(id) {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange=function() {
-    if (this.readyState == 4 && this.status == 200) {
-      json = JSON.parse(this.responseText);
-      if (json.length == 0){
-        document.getElementById("devSubCat").innerHTML = '<p>No Subcategories for selected Category exist. You should add one!';
-      }else{
+        } else {
+        document.getElementById("name").setAttribute("value","Must Select Category");
+        document.getElementById("name").disabled = true;
         document.getElementById("devSubCat").innerHTML = "";
-        document.getElementById("devSubCat").innerHTML = '<p>SubCategories in selected Category:</p><ol id="demo"></ol>';
-        var list = document.getElementById('demo');
-        for( index in json ){
-          var value = json[index];
-          var entry = document.createElement('li');
-          entry.appendChild(document.createTextNode(value.subcategory));
-          list.appendChild(entry);
         }
       }
-    }
-  };
-  xhttp.open("GET", "http://localhost:9000/v1/categories/" + id + "/subcategories", true);
-  xhttp.send();
-}
 
-
+      function function1() {
+        var ul = document.getElementById("list");
+        var li = document.createElement("li");
+        li.appendChild(document.createTextNode("Four"));
+        ul.appendChild(li);
+      }
+  function loadDoc(id) {
+    el = document.getElementById("devSubCat");
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange=function() {
+      if (this.readyState == 4 && this.status == 200) {
+        json = JSON.parse(this.responseText);
+        if (json.length == 0){
+          while (el.firstChild) el.removeChild(el.firstChild);
+          el.innerHTML = '<hr><br><p style="text-align: center;">No Subcategories for selected Category exist. You should add one!</p>';
+        }else{
+          while (el.firstChild) el.removeChild(el.firstChild);
+          // el.innerHTML = '';
+          el.innerHTML = '<hr><br><p style="text-align: center;">SubCategories already in selected Category:</p><ol id="demo" name="demo"></ol>';
+          var list = document.getElementById('demo');
+          for( index in json ){
+            var value = json[index];
+            var entry = document.createElement('li');
+            entry.appendChild(document.createTextNode(value.subcategory));
+            list.appendChild(entry);
+          }
+        }
+      }
+    };
+    xhttp.open("GET", "http://localhost:9000/v1/categories/" + id + "/subcategories", true);
+    xhttp.send();
+  }
+  function goBack() {
+      window.history.back();
+  }
     </script>
   </body>
 </html>
