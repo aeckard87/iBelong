@@ -1,4 +1,4 @@
-
+<!--
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -19,5 +19,69 @@
       <a href="/details/delete" class="button">Delete</a>
       </div>
       <a href="/" class="button">Home</a>
+  </body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iBelong - Details</title>
+    <link rel="stylesheet" href="/css/pure/pure.css">
+    <link rel="stylesheet" href="/css/pure-layout-side-menu/side-menu.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+  </head>
+  <body>
+
+    <div id="layout">
+      <a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+      </a>
+      <div id="menu">
+        <div class="pure-menu custom-restricted-width">
+          <a class="pure-menu-heading" href="#">iBelong</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"><a href="/" class="pure-menu-link"><i class="fas fa-home fa-3x"></i></a></li>
+            <li class="pure-menu-item"><a href="/users" class="pure-menu-link"><i class="fas fa-users fa-3x"></i></a></li>
+            <li class="pure-menu-item"><a href="#" class="pure-menu-link"><i class="fas fa-qrcode fa-3x"></i></a></li>
+            <li class="pure-menu-item"><a href="/settings" class="pure-menu-link"><i class="fas fa-cog fa-3x"></i></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="main">
+      <div class="header">
+        <h1><i class="fas fa-list-ul"></i> Details</h1>
+      </div>
+      <div id="content" class="center">
+        <div>
+          <a href="/details/create" class="pure-button"><i class="fas fa-plus"></i></a>
+          <a href="/details/update" class="pure-button"><i class="fas fa-edit"></i></a>
+          <a href="/details/delete" class="pure-button"><i class="fas fa-minus"></i></a>
+        </div>
+        <div>
+          <ul>
+          {{range .}}
+                <li>{{.Detail}}</li>
+          {{end}}
+          </ul>
+        </div>
+
+        <br><hr><button class="pure-button pure-button-primary" onclick="goBack()"><i class="fas fa-long-arrow-alt-left"> Go Back</i></button>
+
+      </div>
+    </div>
+
+  </div>
+  <script src="/js/pure-layout-side-menu/ui.js"></script>
+  <script src="/js/pure-dropdown-menu/menus.js"></script>
+  <script>
+  function goBack() {
+      window.history.back();
+  }
+  </script>
   </body>
 </html>
