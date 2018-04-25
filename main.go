@@ -73,13 +73,13 @@ func main() {
 	r.HandleFunc("/users/{ID:[0-9]+}/items", models.ItemsByOwner).Methods("GET")
 	r.HandleFunc("/users/{ID:[0-9]+}", models.GetUser).Methods("GET")
 	//Create
-	// r.HandleFunc("/users/create/", models.PostCreateDescriptor).Methods("POST")
+	r.HandleFunc("/users/create", models.PostCreateUser).Methods("POST")
 	r.HandleFunc("/users/create", models.GetCreateUser).Methods("GET")
 	//Update
-	// r.HandleFunc("/users/update/", models.PostUpdateDescriptor).Methods("POST")
+	r.HandleFunc("/users/update", models.PostUpdateUser).Methods("POST")
 	r.HandleFunc("/users/update", models.GetUpdateUser).Methods("GET")
 	//Delete
-	// r.HandleFunc("/users/delete/", models.PostDeleteDescriptor).Methods("POST")
+	r.HandleFunc("/users/delete", models.PostDeleteUser).Methods("POST")
 	r.HandleFunc("/users/delete", models.GetDeleteUser).Methods("GET")
 
 	//Items

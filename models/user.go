@@ -6,6 +6,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -124,6 +125,47 @@ func GetCreateUser(w http.ResponseWriter, r *http.Request) {
 		usersTmpl.Execute(w, users)
 	}
 }
+func PostCreateUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("POST User/Create")
+	var user User
+	err := r.ParseForm()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	user.FirstName = r.PostForm.Get("firstname")
+	user.LastName = r.PostForm.Get("lastname")
+	user.Email = r.PostForm.Get("email")
+	user.Username = r.PostForm.Get("username")
+	fmt.Println(user)
+
+	b, err := json.Marshal(user)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	request_url := "http://localhost:9000/v1/users"
+	req, err := http.NewRequest("POST", request_url, bytes.NewBuffer(b))
+	req.Header.Set("X-Custom-Header", "myvalue")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	fmt.Println("response Status:", resp.Status)
+	fmt.Println("response Headers:", resp.Header)
+	body, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println("response Body:", string(body))
+
+	// ListCategories(w, r, ps)
+	GetListUsers(w, r)
+
+}
 
 func GetUpdateUser(w http.ResponseWriter, r *http.Request) {
 	usersTmpl := template.Must(template.ParseFiles("templates/users/updateUser.html"))
@@ -148,6 +190,48 @@ func GetUpdateUser(w http.ResponseWriter, r *http.Request) {
 		usersTmpl.Execute(w, users)
 	}
 }
+func PostUpdateUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("POST User/Update")
+	var user User
+	err := r.ParseForm()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	user.FirstName = r.PostForm.Get("firstname")
+	user.LastName = r.PostForm.Get("lastname")
+	user.Email = r.PostForm.Get("email")
+	user.Username = r.PostForm.Get("username")
+	// user.ID, err := strconv.Atoi(r.PostForm.Get("userID"))
+	fmt.Println(user)
+	fmt.Println(r.PostForm.Get("userID"))
+
+	b, err := json.Marshal(user)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	request_url := "http://localhost:9000/v1/users/" + r.PostForm.Get("userID")
+	req, err := http.NewRequest("PUT", request_url, bytes.NewBuffer(b))
+	// req.Header.Set("X-Custom-Header", "myvalue")
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	fmt.Println("response Status:", resp.Status)
+	fmt.Println("response Headers:", resp.Header)
+	body, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println("response Body:", string(body))
+
+	http.Redirect(w, r, "http://localhost:8100/users", 301)
+
+}
 
 func GetDeleteUser(w http.ResponseWriter, r *http.Request) {
 	usersTmpl := template.Must(template.ParseFiles("templates/users/deleteUser.html"))
@@ -171,4 +255,33 @@ func GetDeleteUser(w http.ResponseWriter, r *http.Request) {
 	} else {
 		usersTmpl.Execute(w, users)
 	}
+}
+func PostDeleteUser(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	// for key, value := range r.PostForm {
+	// 	fmt.Printf("Key: %s\tValue: %s", key, value)
+	// }
+
+	request_url := "http://localhost:9000/v1/users/" + r.PostForm.Get("userID")
+	fmt.Println(request_url)
+	req, err := http.NewRequest("DELETE", request_url, nil)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	fmt.Println("response Status:", resp.Status)
+	fmt.Println("response Headers:", resp.Header)
+	body, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println("response Body:", string(body))
+
+	GetListUsers(w, r)
+
 }
