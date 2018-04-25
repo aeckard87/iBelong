@@ -70,8 +70,8 @@ func main() {
 
 	//Users
 	r.HandleFunc("/users", models.GetListUsers)
-	r.HandleFunc("/users/{id:[0-9]+}", models.ItemsByOwner).Methods("GET").PathPrefix("/items")
-	r.HandleFunc("/users/{id:[0-9]+}", models.GetUser).Methods("GET")
+	r.HandleFunc("/users/{ID:[0-9]+}/items", models.ItemsByOwner).Methods("GET")
+	r.HandleFunc("/users/{ID:[0-9]+}", models.GetUser).Methods("GET")
 	//Create
 	// r.HandleFunc("/users/create/", models.PostCreateDescriptor).Methods("POST")
 	r.HandleFunc("/users/create", models.GetCreateUser).Methods("GET")

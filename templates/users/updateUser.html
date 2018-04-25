@@ -3,10 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iBelong-Edit Usesr</title>
+    <title>iBelong - Edit User</title>
     <link rel="stylesheet" href="/css/pure/pure.css">
     <link rel="stylesheet" href="/css/pure-layout-side-menu/side-menu.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
   </head>
   <body>
 
@@ -29,14 +30,116 @@
 
     <div id="main">
       <div class="header">
-        <h1>Edit User</h1>
+        <h1><i class="fas fa-edit"></i> Users</h1>
       </div>
-      <div id="content">
+      <div id="content" class="center">
+        <!-- <form class="pure-form pure-form-stacked" action="/users/update" id="updateUser" method="post" name="updateUser"> -->
+        <!--     <fieldset> -->
+        <!--       <label form="userID">User to Edit:</label> -->
+        <!--       <select name="userID" id="userID" onchange="setField(this)"> -->
+        <!--         <option value="">---</option> -->
+        <!--         {{range .}} -->
+        <!--         <option value="{{.ID}}">{{.FirstName}} {{.LastName}}</option> -->
+        <!--         {{end}} -->
+        <!--       </select> -->
+
+        <!--       <br> -->
+
+        <!--       <label for="name">New User's Name</label> -->
+        <!--       <input type="text" placeholder="Tops" name="name" id="name"> -->
+
+        <!--       <button class="pure-button pure-button-primary" type="submit" form="updateUser" value="Submit">Save</button> -->
+        <!--     </fieldset> -->
+        <!-- </form> -->
+
+
+        <form class="pure-form pure-form-stacked" action="/users/update" id="updateUser" method="post" name="updateUser">
+            <fieldset>
+              <label form="userID">Select User:</label>
+              <select name="userID" id="userID" onchange="setField(this)">
+                <option value="---">---</option>
+                {{range .}}
+                <option value="{{.ID}}">{{.FirstName}} {{.LastName}}</option>
+                {{end}}
+              </select>
+
+              <br>
+                <div class="pure-g">
+                    <div class="pure-u-1 pure-u-md-1-2">
+                        <label for="firstname">First Name</label>
+                        <input id="firstname" class="pure-u-23-24" type="text" disabled>
+                    </div>
+
+                    <div class="pure-u-1 pure-u-md-1-2">
+                        <label for="lastname">Last Name</label>
+                        <input id="lastname" class="pure-u-23-24" type="text" disabled>
+                    </div>
+
+                    <div class="pure-u-1 pure-u-md-1-2">
+                        <label for="email">E-Mail</label>
+                        <input id="email" class="pure-u-23-24" type="email" disabled>
+                    </div>
+
+                    <div class="pure-u-1 pure-u-md-1-2">
+                        <label for="username">Username</label>
+                        <input id="username" class="pure-u-23-24" type="text" disabled>
+                    </div>
+
+                </div>
+
+              <button class="pure-button pure-button-primary" type="submit" form="updateUser" value="Submit">Save</button>
+            </fieldset>
+        </form>
+
+        <br><hr><button class="pure-button pure-button-primary" onclick="goBack()"><i class="fas fa-long-arrow-alt-left"> Go Back</i></button>
+
       </div>
     </div>
 
   </div>
   <script src="/js/pure-layout-side-menu/ui.js"></script>
   <script src="/js/pure-dropdown-menu/menus.js"></script>
+  <script>
+    function setField(sel) {
+
+      if (sel.value == '---') {
+        document.getElementById("firstname").setAttribute("value","Select a user!");
+        document.getElementById("lastname").setAttribute("value","");
+        document.getElementById("email").setAttribute("value","");
+        document.getElementById("username").setAttribute("value","");
+
+        document.getElementById("firstname").disabled = true;
+        document.getElementById("lastname").disabled = true;
+        document.getElementById("email").disabled = true;
+        document.getElementById("username").disabled = true;
+      }else{
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange=function() {
+          if (this.readyState == 4 && this.status == 200) {
+            user = JSON.parse(this.responseText);
+            if (user.length == 0){
+              console.log("No details?")
+            }else{
+              document.getElementById("firstname").disabled = false;
+              document.getElementById("lastname").disabled = false;
+              document.getElementById("email").disabled = false;
+              document.getElementById("username").disabled = false;
+
+              document.getElementById("firstname").setAttribute("value",user.firstName);
+              document.getElementById("lastname").setAttribute("value",user.lastName);
+              document.getElementById("email").setAttribute("value",user.email);
+              document.getElementById("username").setAttribute("value",user.username);
+            }
+          }
+        };
+        xhttp.open("GET", "http://localhost:9000/v1/users/" + sel.value , true);
+        xhttp.send();
+      }
+    }
+
+    function goBack() {
+        window.history.back();
+    }
+    </script>
   </body>
 </html>

@@ -1,9 +1,64 @@
+<!-- <!DOCTYPE html> -->
+<!-- <html lang="en" dir="ltr"> -->
+<!--   <head> -->
+<!--     <meta charset="utf-8"> -->
+<!--     <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+<!--     <title>iBelong-Home</title> -->
+<!--     <link rel="stylesheet" href="/css/pure/pure.css"> -->
+<!--     <link rel="stylesheet" href="/css/pure-layout-side-menu/side-menu.css"> -->
+<!--     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous"> -->
+<!--   </head> -->
+<!--   <body> -->
+
+<!--     <div id="layout"> -->
+<!--       <a href="#menu" id="menuLink" class="menu-link"> -->
+<!--         <1!-- Hamburger icon --1> -->
+<!--         <span></span> -->
+<!--       </a> -->
+<!--       <div id="menu"> -->
+<!--         <div class="pure-menu custom-restricted-width"> -->
+<!--           <a class="pure-menu-heading" href="#">iBelong</a> -->
+<!--         <ul class="pure-menu-list"> -->
+<!--             <li class="pure-menu-item"><a href="/#" class="pure-menu-link"><i class="fas fa-home fa-3x"></i></a></li> -->
+<!--             <li class="pure-menu-item"><a href="/users" class="pure-menu-link"><i class="fas fa-users fa-3x"></i></a></li> -->
+<!--             <li class="pure-menu-item"><a href="#" class="pure-menu-link"><i class="fas fa-qrcode fa-3x"></i></a></li> -->
+<!--             <li class="pure-menu-item"><a href="/settings" class="pure-menu-link"><i class="fas fa-cog fa-3x"></i></a></li> -->
+<!--         </ul> -->
+<!--       </div> -->
+<!--     </div> -->
+
+<!--     <div id="main"> -->
+<!--       <div class="header"> -->
+<!--         <h1><i class="fas fa-users fa-1x"></i>Users</h1> -->
+<!--       </div> -->
+<!--       <div id="content"> -->
+<!--         <div class="pure-button-group" role="group" aria-label="..."> -->
+<!--             <button class="pure-button"><i class="fas fa-user-plus"></i></button> -->
+<!--             <button class="pure-button"><i class="fas fa-user-times"></i></button> -->
+<!--         </div> -->
+<!--         <br> -->
+<!--           <ul style="list-style-type:square"> -->
+<!--            {{range .}} -->
+<!--            <li><a href="/users/{{.ID}}/items" class="pure-button pure-button-primary"><i class="fas fa-user"></i>  {{.FirstName}} {{.LastName}}</a></li><br> -->
+<!--           {{end}} -->
+<!--           </ul> -->
+
+<!--       </div> -->
+<!--     </div> -->
+
+<!--   </div> -->
+<!--   <script src="/js/pure-layout-side-menu/ui.js"></script> -->
+<!--   <script src="/js/pure-dropdown-menu/menus.js"></script> -->
+<!--   </body> -->
+<!-- </html> -->
+
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iBelong-Home</title>
+    <title>iBelong - Users</title>
     <link rel="stylesheet" href="/css/pure/pure.css">
     <link rel="stylesheet" href="/css/pure-layout-side-menu/side-menu.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
@@ -19,7 +74,7 @@
         <div class="pure-menu custom-restricted-width">
           <a class="pure-menu-heading" href="#">iBelong</a>
         <ul class="pure-menu-list">
-            <li class="pure-menu-item"><a href="/#" class="pure-menu-link"><i class="fas fa-home fa-3x"></i></a></li>
+            <li class="pure-menu-item"><a href="/" class="pure-menu-link"><i class="fas fa-home fa-3x"></i></a></li>
             <li class="pure-menu-item"><a href="/users" class="pure-menu-link"><i class="fas fa-users fa-3x"></i></a></li>
             <li class="pure-menu-item"><a href="#" class="pure-menu-link"><i class="fas fa-qrcode fa-3x"></i></a></li>
             <li class="pure-menu-item"><a href="/settings" class="pure-menu-link"><i class="fas fa-cog fa-3x"></i></a></li>
@@ -29,19 +84,24 @@
 
     <div id="main">
       <div class="header">
-        <h1><i class="fas fa-users fa-1x"></i>Users</h1>
+        <h1><i class="fas fa-users fa-1x"></i> Users</h1>
       </div>
-      <div id="content">
-        <div class="pure-button-group" role="group" aria-label="...">
-            <button class="pure-button"><i class="fas fa-user-plus"></i></button>
-            <button class="pure-button"><i class="fas fa-user-times"></i></button>
+      <div id="content" class="center">
+        <div>
+          <a href="/users/create" class="pure-button"><i class="fas fa-plus"></i></a>
+          <a href="/users/update" class="pure-button"><i class="fas fa-edit"></i></a>
+          <a href="/users/delete" class="pure-button"><i class="fas fa-minus"></i></a>
         </div>
-        <br>
-          <ul style="list-style-type:square">
+        <div>
+          <br>
+          <ul style="list-style-type:none">
            {{range .}}
-           <li><a href="/users/{{.ID}}/items" class="pure-button pure-button-primary"><i class="fas fa-user"></i>  {{.FirstName}} {{.LastName}}</a></li><br>
+           <li><a href="/users/{{.ID}}" class="pure-button pure-button-primary"><i class="fas fa-user"></i>  {{.FirstName}} {{.LastName}}</a></li><br>
           {{end}}
           </ul>
+        </div>
+
+        <br><hr><button class="pure-button pure-button-primary" onclick="goBack()"><i class="fas fa-long-arrow-alt-left"> Go Back</i></button>
 
       </div>
     </div>
@@ -49,6 +109,11 @@
   </div>
   <script src="/js/pure-layout-side-menu/ui.js"></script>
   <script src="/js/pure-dropdown-menu/menus.js"></script>
+  <script>
+  function goBack() {
+      window.history.back();
+  }
+  </script>
   </body>
 </html>
 
