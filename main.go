@@ -84,6 +84,7 @@ func main() {
 
 	//Items
 	r.HandleFunc("/items", models.GetListItems).Methods("GET")
+	r.HandleFunc("/items/{ID:[0-9]+}", models.GetListItem).Methods("GET")
 
 	//Static file location
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))

@@ -111,6 +111,33 @@ func GetListItems(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func GetListItem(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("GET Item")
+	vars := mux.Vars(r)
+	id := vars["ID"]
+
+	itemTmpl := template.Must(template.ParseFiles("templates/items/item.html"))
+	url := "http://localhost:9000/v1/items/" + id
+	var client http.Client
+	resp, err := client.Get(url)
+	if err != nil {
+		// err
+	}
+	defer resp.Body.Close()
+	var item Item
+	if resp.StatusCode == http.StatusOK {
+		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
+		if err2 != nil {
+			fmt.Println(err2)
+		}
+		// bodyString := string(bodyBytes)
+		// fmt.Println(bodyString)
+		json.Unmarshal(bodyBytes, &item)
+		itemTmpl.Execute(w, item)
+	} else {
+		itemTmpl.Execute(w, item)
+	}
+}
 func ItemsByOwner(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("GET ItemsByOwner")
 	vars := mux.Vars(r)

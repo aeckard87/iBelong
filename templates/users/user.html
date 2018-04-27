@@ -1,38 +1,189 @@
+<!-- <!DOCTYPE html> -->
+<!-- <html lang="en" dir="ltr"> -->
+<!--   <head> -->
+<!--     <meta charset="utf-8"> -->
+<!--     <title>iBelong - {{.Username}}</title> -->
+<!--     <link rel="stylesheet" href="../../css/theme.css" type="text/css"> -->
+<!--   </head> -->
+<!--   <body> -->
+<!--     <h1>{{.FirstName}}'s Profile</h1> -->
+<!--       <div> -->
+<!--         First name: <input type="text" name="firstName" disabled value="{{.FirstName}}"><br> -->
+<!--         Last name: <input type="text" name="lastName" disabled value="{{.LastName}}"><br> -->
+<!--         UserName: <input type="text" name="username" disabled value="{{.Username}}"><br> -->
+<!--         Email: <input type="text" name="email" disabled value="{{.Email}}"><br> -->
+<!--         <div> -->
+<!--           <h2>Items</h2> -->
+<!--             {{if .Items -}} -->
+<!--                 {{- range .Items}} -->
+<!--                   <1!-- <li>{{.Name}}</li> --1> -->
+<!--                   <a href="" class="button" onclick="itemDetails(this)" value="{{.ID}}">{{.Name}}</a><br> -->
+<!--                 {{end}} -->
+<!--             {{- else}} -->
+<!--             No Items Found. -->
+<!--             {{- end}} -->
+<!--         </div> -->
+<!--       </div> -->
+<!--       <a href="/" class="button">Home</a> -->
+
+<!--   <script> -->
+
+<!--     function itemDetails(sel){ -->
+<!--       console.log("what is sel?" + sel) -->
+<!--       console.log("IDK?") -->
+<!--     } -->
+
+<!--   </script> -->
+<!--   </body> -->
+<!-- </html> -->
+
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>iBelong - {{.Username}}</title>
-    <link rel="stylesheet" href="../../css/theme.css" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iBelong - {{.FirstName}}</title>
+    <link rel="stylesheet" href="/css/pure/pure.css">
+    <link rel="stylesheet" href="/css/pure-layout-side-menu/side-menu.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css"> -->
   </head>
   <body>
-    <h1>{{.FirstName}}'s Profile</h1>
-      <div>
-        First name: <input type="text" name="firstName" disabled value="{{.FirstName}}"><br>
-        Last name: <input type="text" name="lastName" disabled value="{{.LastName}}"><br>
-        UserName: <input type="text" name="username" disabled value="{{.Username}}"><br>
-        Email: <input type="text" name="email" disabled value="{{.Email}}"><br>
-        <div>
-          <h2>Items</h2>
-            {{if .Items -}}
-                {{- range .Items}}
-                  <!-- <li>{{.Name}}</li> -->
-                  <a href="" class="button" onclick="itemDetails(this)" value="{{.ID}}">{{.Name}}</a><br>
-                {{end}}
-            {{- else}}
-            No Items Found.
-            {{- end}}
-        </div>
+
+    <div id="layout">
+      <a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+      </a>
+      <div id="menu">
+        <div class="pure-menu custom-restricted-width">
+          <a class="pure-menu-heading" href="#">iBelong</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"><a href="/" class="pure-menu-link"><i class="fas fa-home fa-3x"></i></a></li>
+            <li class="pure-menu-item"><a href="/users" class="pure-menu-link"><i class="fas fa-users fa-3x"></i></a></li>
+            <li class="pure-menu-item"><a href="#" class="pure-menu-link"><i class="fas fa-qrcode fa-3x"></i></a></li>
+            <li class="pure-menu-item"><a href="/settings" class="pure-menu-link"><i class="fas fa-cog fa-3x"></i></a></li>
+        </ul>
       </div>
-      <a href="/" class="button">Home</a>
+    </div>
 
+    <div id="main">
+      <div class="header">
+        <h1><i class="fas fa-user"></i> {{.FirstName}}'s Profile</h1>
+      </div>
+      <div id="content" class="center">
+        <form class="pure-form pure-form-stacked">
+            <fieldset>
+                <div class="pure-g">
+                    <div class="pure-u-1 pure-u-md-1-2">
+                        <label for="firstname">First Name</label>
+                        <input id="firstname" name="firstname" class="pure-u-23-24" type="text" value="{{.FirstName}}" disabled>
+                    </div>
+
+                    <div class="pure-u-1 pure-u-md-1-2">
+                        <label for="lastname">Last Name</label>
+                        <input id="lastname" name="lastname" class="pure-u-23-24" type="text" value="{{.LastName}}" disabled>
+                    </div>
+
+                    <div class="pure-u-1 pure-u-md-1-2">
+                        <label for="email">E-Mail</label>
+                        <input id="email" name="email" class="pure-u-23-24" type="email" value="{{.Email}}" disabled>
+                    </div>
+
+                    <div class="pure-u-1 pure-u-md-1-2">
+                        <label for="username">Username</label>
+                        <input id="username" name="username" class="pure-u-23-24" type="text" value="{{.Username}}" disabled>
+                    </div>
+
+                    <div class="pure-u-1 pure-u-md-1-2">
+                      <label>Items</label>
+                        {{if .Items -}}
+                          <ul>
+                            {{- range .Items}}
+                              <!-- <li>{{.Name}}</li> -->
+                              <li><a href="/items/{{.ID}}" class="button" onclick="itemDetails(this)" value="{{.ID}}">{{.Name}}</a></li><br>
+                              {{end}}
+                          </ul>
+                        {{- else}}
+                        No Items Found.
+                        {{- end}}
+                    </div>
+
+                </div>
+
+              <!-- <button type="submit" class="pure-button pure-button-primary" form="createUser" value="Submit">Create</button> -->
+            </fieldset>
+        </form>
+
+
+        <!-- <form class="pure-form pure-form-aligned" action="/users/create" id="createUser" method="post" name="createUser"> -->
+        <!--     <fieldset> -->
+        <!--         <div class="pure-control-group"> -->
+        <!--             <label for="username">Username</label> -->
+        <!--             <input id="username" type="text" placeholder="Username"> -->
+        <!--             <span class="pure-form-message-inline">This is a required field.</span> -->
+        <!--         </div> -->
+
+        <!--         <div class="pure-control-group"> -->
+        <!--             <label for="firstname">First Name</label> -->
+        <!--             <input id="firstname" type="text" placeholder="First Name"> -->
+        <!--         </div> -->
+
+        <!--         <div class="pure-control-group"> -->
+        <!--             <label for="lastname">Last Name</label> -->
+        <!--             <input id="lastname" type="text" placeholder="Last Name"> -->
+        <!--         </div> -->
+
+        <!--         <div class="pure-control-group"> -->
+        <!--             <label for="email">Email Address</label> -->
+        <!--             <input id="email" type="email" placeholder="Email Address"> -->
+        <!--         </div> -->
+
+        <!--         <div class="pure-controls"> -->
+        <!--             <button type="submit" class="pure-button pure-button-primary" form="createUser" value="Submit">Create</button> -->
+        <!--         </div> -->
+        <!--     </fieldset> -->
+        <!-- </form> -->
+
+        <br><hr><button class="pure-button pure-button-primary" onclick="goBack()"><i class="fas fa-long-arrow-alt-left"> Go Back</i></button>
+
+      </div>
+    </div>
+
+  </div>
+  <script src="/js/pure-layout-side-menu/ui.js"></script>
+  <script src="/js/pure-dropdown-menu/menus.js"></script>
   <script>
+    function setField(sel) {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange=function() {
+        if (this.readyState == 4 && this.status == 200) {
+          items = JSON.parse(this.responseText);
+          if (items.length == 0){
+            console.log("No items?")
+          }else{
+            document.getElementById("firstname").disabled = false;
+            document.getElementById("lastname").disabled = false;
+            document.getElementById("email").disabled = false;
+            document.getElementById("username").disabled = false;
 
-    function itemDetails(sel){
-      console.log("what is sel?" + sel)
-      console.log("IDK?")
+            document.getElementById("firstname").setAttribute("value",user.firstName);
+            document.getElementById("lastname").setAttribute("value",user.lastName);
+            document.getElementById("email").setAttribute("value",user.email);
+            document.getElementById("username").setAttribute("value",user.username);
+          }
+        }
+      };
+      xhttp.open("GET", "http://localhost:9000/v1/users/{{.ID}}/items" , true);
+      xhttp.send();
     }
-
+  function goBack() {
+      window.history.back();
+  }
+  function itemDetails(sel){
+    console.log("IDK?")
+  }
   </script>
   </body>
 </html>
