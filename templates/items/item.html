@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/css/pure/pure.css">
     <link rel="stylesheet" href="/css/pure-layout-side-menu/side-menu.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
-    <!-- <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css"> -->
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
   </head>
   <body onload="start()">
 
@@ -33,29 +33,31 @@
         <h1><i class="fas fa-basket"></i> {{.Name}}</h1>
       </div>
       <div id="content" class="center">
-        <form class="pure-form pure-form-stacked">
-            <fieldset>
+        <!-- <form class="pure-form pure-form-stacked"> -->
+            <!-- <fieldset> -->
                 <div class="pure-g">
                     <div class="pure-u-1 pure-u-md-1-2">
-                      <label for="firstname">{{.Name}}</label>
+                        <p class="pure-u-23-24" id="owner" name="owner"></p>
                     </div>
 
                     <div class="pure-u-1 pure-u-md-1-2">
-                        <label for="lastname">Last Name</label>
+                        <p class="pure-u-23-24" id="category" name="category"></p>
                     </div>
 
                     <div class="pure-u-1 pure-u-md-1-2">
-                        <label for="email">E-Mail</label>
-                    </div>
-
-                    <div class="pure-u-1 pure-u-md-1-2">
-                        <label for="username">Username</label>
+                        <!-- <p class="pure-u-23-24" id="descriptions" name="discriptions"></p> -->
+                        <ul>
+                        {{range .Descriptions}}
+                        <br><li value="{{.ID}}" onclick="load(this)" style="list-style-type:none;"><button class="pure-button pure-button-primary" id="detailButton{{.DetailID}}" name="detailButton{{.DetailID}}"></button><br>
+                          <ul id="{{.ID}}" value="false"></ul></li>
+                        {{end}}
+                        </ul>
                     </div>
 
                 </div>
 
-            </fieldset>
-        </form>
+            <!-- </fieldset> -->
+        <!-- </form> -->
 
         <br><hr><button class="pure-button pure-button-primary" onclick="goBack()"><i class="fas fa-long-arrow-alt-left"> Go Back</i></button>
 
@@ -66,11 +68,14 @@
   <script src="/js/pure-layout-side-menu/ui.js"></script>
   <script src="/js/pure-dropdown-menu/menus.js"></script>
   <script>
+    var gSubcategory
+    var gDescription
+    var descriptions = {{.Descriptions}}
     function start(){
+      console.log(descriptions)
       subcatID = '{{.SubCategoryID}}';
       ownerID = '{{.UserID}}';
-   //   descriptions = '{{(index .Descriptions 0).Descriptor}}';
-   //   console.log(descriptions);
+   // descriptions = '{{(index .Descriptions 0).Descriptor}}';
 
       request("users/" + ownerID,getOwner);
       request("subcategories/" + subcatID,getSubcategory);
@@ -78,8 +83,7 @@
 
       {{if .Descriptions -}}
         {{- range .Descriptions}}
-      getDescription({{.}});
-
+          getDescription({{.}});
         {{end}}
       {{- end}}
 
@@ -91,39 +95,29 @@
 
   function getOwner(user){
     console.log(user)
-    if (user.length == 0){
-      // There are no results, handle!
-    }else{
-      for( index in user ){
-        var value = user[index];
-        console.log("USER: " + value.FirstName)
-      }
-    }
+    document.getElementById("owner").innerHTML = "Owner: " + user.firstName;
   }
   function getSubcategory(subcategory){
-    console.log(subcategory)
-    request('categories/' + subcategory.category_id, getCategory)
-    if (subcategory.length == 0){
-      // There are no results, handle!
-    }else{
-      for( index in subcategory ){
-        var value = subcategory[index];
-        console.log("SUBCAT: " + value.NAME)
-      }
-    }
+    gSubcategory = subcategory
+    request('categories/' + subcategory.categoryID, getCategory)
   }
 
   function getCategory(category){
     console.log(category);
+    console.log(gSubcategory)
+    document.getElementById("category").innerHTML = "Categorized as <b> " + gSubcategory.subcategory + "</b> under <b>" + category.category + "</b>.";
   }
 
   function getDescription(descriptor){
     console.log(descriptor);
+    gDescription = descriptor
     request('details/' + descriptor.detailId, getDetail)
   }
 
   function getDetail(detail){
     console.log(detail)
+    detailButton = "detailButton" + detail.id;
+    document.getElementById(detailButton).innerHTML = detail.detail;
   }
 
   function request(ep, callback){
@@ -137,6 +131,32 @@
     xhttp.open("GET", "http://localhost:9000/v1/" + ep, true);
     xhttp.send();
   }
+
+  function load(id) {
+    for (e in descriptions) {
+      if (descriptions[e].id == id.value) {
+        if (document.getElementById(id.value).value == "true") {
+            document.getElementById(id.value).innerHTML = "";
+              document.getElementById(id.value).value="false";
+        }else{
+          document.getElementById(id.value).innerHTML = "";
+          json = descriptions[e];
+          if (json.length == 0){
+            document.getElementById(id.value).value="true";
+            document.getElementById(id.value).innerHTML = '<p>No Descriptions for selected Detail exist.';
+          }else{
+            document.getElementById(id.value).value="true";
+            var list = document.getElementById(id.value);
+            var entry = document.createElement('li');
+            entry.appendChild(document.createTextNode(json.descriptor));
+            list.appendChild(entry);
+          }
+        }
+      }
+
+    }
+  }
+
   </script>
   </body>
 </html>
