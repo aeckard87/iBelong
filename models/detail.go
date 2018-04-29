@@ -65,7 +65,7 @@ func (m *Detail) UnmarshalBinary(b []byte) error {
 }
 
 func GetDetails() []Detail {
-	url := "http://localhost:9000/v1/details/"
+	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/details/"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
@@ -109,7 +109,7 @@ func PostCreateDetail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	request_url := "http://localhost:9000/v1/details"
+	request_url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/details"
 	req, err := http.NewRequest("POST", request_url, bytes.NewBuffer(b))
 	req.Header.Set("X-Custom-Header", "myvalue")
 	req.Header.Set("Content-Type", "application/json")
@@ -126,7 +126,7 @@ func PostCreateDetail(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(resp.Body)
 	fmt.Println("response Body:", string(body))
 
-	http.Redirect(w, r, "http://localhost:8100/details", 301)
+	http.Redirect(w, r, "http://10.0.0.13:8100/details", 301)
 
 }
 
@@ -152,7 +152,7 @@ func PostUpdateDetail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	request_url := "http://localhost:9000/v1/details/" + r.PostForm.Get("detailID")
+	request_url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/details/" + r.PostForm.Get("detailID")
 	req, err := http.NewRequest("PUT", request_url, bytes.NewBuffer(b))
 	req.Header.Set("X-Custom-Header", "myvalue")
 	req.Header.Set("Content-Type", "application/json")
@@ -169,13 +169,13 @@ func PostUpdateDetail(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(resp.Body)
 	fmt.Println("response Body:", string(body))
 
-	http.Redirect(w, r, "http://localhost:8100/details", 301)
+	http.Redirect(w, r, "http://10.0.0.13:8100/details", 301)
 
 }
 
 func ListDetails(w http.ResponseWriter, r *http.Request) { //, ps httprouter.Params) {
 	tmpl := template.Must(template.ParseFiles("templates/details/listDetails.html"))
-	url := "http://localhost:9000/v1/details"
+	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/details"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
@@ -199,7 +199,7 @@ func ListDetails(w http.ResponseWriter, r *http.Request) { //, ps httprouter.Par
 
 func GetDeleteDetail(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.ParseFiles("templates/details/deleteDetail.html"))
-	url := "http://localhost:9000/v1/details"
+	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/details"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
@@ -231,7 +231,7 @@ func PostDeleteDetail(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Key: %s\tValue: %s", key, value)
 	}
 
-	request_url := "http://localhost:9000/v1/details/" + r.PostForm.Get("detailID")
+	request_url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/details/" + r.PostForm.Get("detailID")
 	fmt.Println(request_url)
 	req, err := http.NewRequest("DELETE", request_url, nil)
 

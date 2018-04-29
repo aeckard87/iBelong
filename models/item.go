@@ -89,7 +89,7 @@ func (m *Item) UnmarshalBinary(b []byte) error {
 
 func GetListItems(w http.ResponseWriter, r *http.Request) {
 	itemTmpl := template.Must(template.ParseFiles("templates/items/items.html"))
-	url := "http://localhost:9000/v1/items"
+	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/items"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
@@ -117,7 +117,7 @@ func GetListItem(w http.ResponseWriter, r *http.Request) {
 	id := vars["ID"]
 
 	itemTmpl := template.Must(template.ParseFiles("templates/items/item.html"))
-	url := "http://localhost:9000/v1/items/" + id
+	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/items/" + id
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
@@ -144,8 +144,8 @@ func ItemsByOwner(w http.ResponseWriter, r *http.Request) {
 	id := vars["ID"]
 
 	tmpl := template.Must(template.ParseFiles("./templates/items/itemsByOwner.html"))
-	itemUrl := "http://localhost:9000/v1/users/" + id + "/items"
-	userUrl := "http://localhost:9000/v1/users/" + id
+	itemUrl := "http://10.0.0.13:8081/aeckard87/wornOut/v1/users/" + id + "/items"
+	userUrl := "http://10.0.0.13:8081/aeckard87/wornOut/v1/users/" + id
 
 	var client http.Client
 	itemResp, err := client.Get(itemUrl)
@@ -184,8 +184,8 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	id := vars["ID"]
 
 	tmpl := template.Must(template.ParseFiles("./templates/users/user.html"))
-	itemUrl := "http://localhost:9000/v1/users/" + id + "/items"
-	userUrl := "http://localhost:9000/v1/users/" + id
+	itemUrl := "http://10.0.0.13:8081/aeckard87/wornOut/v1/users/" + id + "/items"
+	userUrl := "http://10.0.0.13:8081/aeckard87/wornOut/v1/users/" + id
 
 	var client http.Client
 	itemResp, err := client.Get(itemUrl)

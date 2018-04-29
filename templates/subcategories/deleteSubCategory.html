@@ -75,6 +75,9 @@
         }
       }
       var xhttp = new XMLHttpRequest();
+      xhttp.open("GET", "http://10.0.0.13:8081/aeckard87/wornOut/v1/categories/" + id.value + "/subcategories", true);
+      xhttp.setRequestHeader("Content-Type", "application/json")
+      xhttp.setRequestHeader("Accept", "application/json")
       xhttp.onreadystatechange=function() {
         if (this.readyState == 4 && this.status == 200) {
           json = JSON.parse(this.responseText);
@@ -99,7 +102,6 @@
           }
         }
       };
-      xhttp.open("GET", "http://localhost:9000/v1/categories/" + id.value + "/subcategories", true);
       xhttp.send();
     }
   function goBack() {

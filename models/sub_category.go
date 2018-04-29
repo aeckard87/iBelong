@@ -95,7 +95,7 @@ func subcategoriesByCategory(id int64) []SubCategory {
 
 func ListSubCategories(w http.ResponseWriter, r *http.Request) { //, ps httprouter.Params) {
 	tmpl := template.Must(template.ParseFiles("templates/subcategories/listsubcategoriesbycategory.html"))
-	url := "http://localhost:9000/v1/categories"
+	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/categories"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
@@ -145,7 +145,7 @@ func PostCreateSubCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	request_url := fmt.Sprintf("http://localhost:9000/v1/categories/%s/subcategories", r.PostForm.Get("categoryID"))
+	request_url := fmt.Sprintf("http://10.0.0.13:8081/aeckard87/wornOut/v1/categories/%s/subcategories", r.PostForm.Get("categoryID"))
 	fmt.Println(request_url)
 	req, err := http.NewRequest("POST", request_url, bytes.NewBuffer(b))
 	req.Header.Set("X-Custom-Header", "myvalue")
@@ -169,7 +169,7 @@ func PostCreateSubCategory(w http.ResponseWriter, r *http.Request) {
 
 func GetDeleteSubCategory(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.ParseFiles("templates/subcategories/deleteSubcategory.html"))
-	url := "http://localhost:9000/v1/categories"
+	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/categories"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
@@ -197,7 +197,7 @@ func PostDeleteSubCategory(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 
-	request_url := "http://localhost:9000/v1/subcategories/" + r.PostForm.Get("subcategoryID")
+	request_url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/subcategories/" + r.PostForm.Get("subcategoryID")
 	fmt.Println(request_url)
 	req, err := http.NewRequest("DELETE", request_url, nil)
 
@@ -213,13 +213,13 @@ func PostDeleteSubCategory(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(resp.Body)
 	fmt.Println("response Body:", string(body))
 
-	http.Redirect(w, r, "http://localhost:8100/subcategories", 301)
+	http.Redirect(w, r, "http://10.0.0.13:8100/subcategories", 301)
 
 }
 
 func GetUpdateSubCategory(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.ParseFiles("templates/subcategories/updateSubcategory.html"))
-	url := "http://localhost:9000/v1/categories"
+	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/categories"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
@@ -258,7 +258,7 @@ func PostUpdateSubCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	request_url := "http://localhost:9000/v1/subcategories/" + r.PostForm.Get("subcategoryID")
+	request_url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/subcategories/" + r.PostForm.Get("subcategoryID")
 	req, err := http.NewRequest("PUT", request_url, bytes.NewBuffer(b))
 	req.Header.Set("X-Custom-Header", "myvalue")
 	req.Header.Set("Content-Type", "application/json")
@@ -275,6 +275,6 @@ func PostUpdateSubCategory(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(resp.Body)
 	fmt.Println("response Body:", string(body))
 
-	http.Redirect(w, r, "http://localhost:8100/subcategories", 301)
+	http.Redirect(w, r, "http://10.0.0.13:8100/subcategories", 301)
 
 }

@@ -1511,8 +1511,16 @@ striping:
 /* My Own Additions */
 .center {
     margin: auto;
-    width: 50%;
-    padding: 10px;
+    width: 73%;
+    padding: 5px;
+}
+
+.l-box-5 {
+  padding: 3em;
+}
+
+.l-box-3 {
+  padding: 1em;
 }
 
 .button-success,

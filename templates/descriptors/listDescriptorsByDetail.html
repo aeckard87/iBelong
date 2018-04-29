@@ -63,6 +63,9 @@
           document.getElementById(id.value).value="false";
     }else{
       var xhttp = new XMLHttpRequest();
+      xhttp.open("GET", "http://10.0.0.13:8081/aeckard87/wornOut/v1/details/" + id.value + "/descriptors", true);
+      xhttp.setRequestHeader("Content-Type", "application/json")
+      xhttp.setRequestHeader("Accept", "application/json")
       xhttp.onreadystatechange=function() {
         if (this.readyState == 4 && this.status == 200) {
           document.getElementById(id.value).innerHTML = "";
@@ -82,7 +85,6 @@
           }
         }
       };
-      xhttp.open("GET", "http://localhost:9000/v1/details/" + id.value + "/descriptors", true);
       xhttp.send();
     }
   }

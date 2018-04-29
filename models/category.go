@@ -67,7 +67,7 @@ func (m *Category) UnmarshalBinary(b []byte) error {
 }
 
 func GetCategories() []Category {
-	url := "http://localhost:9000/v1/categories/"
+	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/categories/"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
@@ -111,7 +111,7 @@ func PostCreateCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	request_url := "http://localhost:9000/v1/categories"
+	request_url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/categories"
 	req, err := http.NewRequest("POST", request_url, bytes.NewBuffer(b))
 	req.Header.Set("X-Custom-Header", "myvalue")
 	req.Header.Set("Content-Type", "application/json")
@@ -155,7 +155,7 @@ func PostUpdateCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	request_url := "http://localhost:9000/v1/categories/" + r.PostForm.Get("categoryID")
+	request_url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/categories/" + r.PostForm.Get("categoryID")
 	req, err := http.NewRequest("PUT", request_url, bytes.NewBuffer(b))
 	req.Header.Set("X-Custom-Header", "myvalue")
 	req.Header.Set("Content-Type", "application/json")
@@ -172,7 +172,7 @@ func PostUpdateCategory(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(resp.Body)
 	fmt.Println("response Body:", string(body))
 
-	http.Redirect(w, r, "http://localhost:8100/categories", 301)
+	http.Redirect(w, r, "http://10.0.0.13:8100/categories", 301)
 
 }
 
@@ -182,7 +182,7 @@ func ListCategory(w http.ResponseWriter, r *http.Request) {
 	id := vars["ID"]
 
 	tmpl := template.Must(template.ParseFiles("templates/categories/listCategory.html"))
-	url := fmt.Sprintf("http://localhost:9000/v1/categories/%v", id)
+	url := fmt.Sprintf("http://10.0.0.13:8081/aeckard87/wornOut/v1/categories/%v", id)
 	fmt.Println("URL", url)
 
 	var client http.Client
@@ -210,7 +210,7 @@ func ListCategory(w http.ResponseWriter, r *http.Request) {
 
 func ListCategories(w http.ResponseWriter, r *http.Request) { //, ps httprouter.Params) {
 	tmpl := template.Must(template.ParseFiles("templates/categories/listCategories.html"))
-	url := "http://localhost:9000/v1/categories"
+	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/categories"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
@@ -234,7 +234,7 @@ func ListCategories(w http.ResponseWriter, r *http.Request) { //, ps httprouter.
 
 func GetDeleteCategory(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.ParseFiles("templates/categories/deleteCategory.html"))
-	url := "http://localhost:9000/v1/categories"
+	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/categories"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
@@ -266,7 +266,7 @@ func PostDeleteCategory(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Key: %s\tValue: %s", key, value)
 	}
 
-	request_url := "http://localhost:9000/v1/categories/" + r.PostForm.Get("categoryID")
+	request_url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/categories/" + r.PostForm.Get("categoryID")
 	fmt.Println(request_url)
 	req, err := http.NewRequest("DELETE", request_url, nil)
 
