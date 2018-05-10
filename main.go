@@ -1,14 +1,25 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
+	"log"
 	"net/http"
+	"os"
 
 	models "github.com/aeckard87/iBelong/models"
 	"github.com/gorilla/mux"
 )
 
+var URI string
+
 func main() {
+	origin := os.Getenv("WORN_OUT_ORIGIN")
+	wornoutPort := os.Getenv("WORN_OUT_PORT")
+	path := os.Getenv("WORN_OUT_PATH")
+
+	URI = fmt.Sprintf("%s:%s%s", origin, wornoutPort, path)
+	fmt.Println("WORN_OUT_URI; " + URI)
 
 	r := mux.NewRouter()
 	// r.HandleFunc("/search/{searchTerm}", Search)
@@ -91,7 +102,10 @@ func main() {
 	// http.Handle("/tmp/", http.StripPrefix("/tmp/", http.FileServer(http.Dir("./static/"))))
 
 	http.Handle("/", r)
-	http.ListenAndServe(":8100", nil)
+	// http.ListenAndServe(":8100", nil)
+	port := os.Getenv("IBELONG_PORT")
+	fmt.Println("IBELONG PORT: " + port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 
 	//----------------//
 

@@ -34,6 +34,18 @@ type Descriptor struct {
 	ID int64 `gorm:"primary_key;auto_incement" json:"id,omitempty"`
 }
 
+type Data struct {
+
+	//API
+	API API
+
+	// Descriptor
+	Descriptor Descriptor
+
+	// Detail
+	Details []Detail
+}
+
 /* polymorph Descriptor descriptor false */
 
 /* polymorph Descriptor detailId false */
@@ -121,14 +133,18 @@ func ListDescriptors(w http.ResponseWriter, r *http.Request) { //, ps httprouter
 
 func GetCreateDescriptor(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("GET Descriptor/Create")
+	// var data Data
+	// data.API.GetAPIPath()
+	// data.Details = GetDetails()
 	details := GetDetails()
-	// tmpl := template.Must(template.ParseFiles("templates/descriptors/createDescriptor.html"))
-	tmpl, err := template.New("createDescriptor.html").Funcs(template.FuncMap{
-		"subcatByCat": descriptorsByDetail,
-	}).ParseFiles("templates/descriptors/createDescriptor.html")
-	if err != nil {
-		fmt.Println(err)
-	}
+
+	tmpl := template.Must(template.ParseFiles("templates/descriptors/createDescriptor.html"))
+	// tmpl, err := template.New("createDescriptor.html").Funcs(template.FuncMap{
+	// 	"subcatByCat": descriptorsByDetail,
+	// }).ParseFiles("templates/descriptors/createDescriptor.html")
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
 	tmpl.Execute(w, details)
 }
 

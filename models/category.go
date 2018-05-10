@@ -111,8 +111,11 @@ func PostCreateCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	request_url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/categories"
-	req, err := http.NewRequest("POST", request_url, bytes.NewBuffer(b))
+	// localhost:8081/aeckard87/wornOut/
+	var api API
+	api.GetAPIPath()
+	request_url := api.URI + "/v1/categories"
+	req, _ := http.NewRequest("POST", request_url, bytes.NewBuffer(b))
 	req.Header.Set("X-Custom-Header", "myvalue")
 	req.Header.Set("Content-Type", "application/json")
 
@@ -154,8 +157,9 @@ func PostUpdateCategory(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		return
 	}
-
-	request_url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/categories/" + r.PostForm.Get("categoryID")
+	var api API
+	api.GetAPIPath()
+	request_url := api.URI + "/v1/categories/" + r.PostForm.Get("categoryID")
 	req, err := http.NewRequest("PUT", request_url, bytes.NewBuffer(b))
 	req.Header.Set("X-Custom-Header", "myvalue")
 	req.Header.Set("Content-Type", "application/json")
@@ -172,7 +176,9 @@ func PostUpdateCategory(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(resp.Body)
 	fmt.Println("response Body:", string(body))
 
-	http.Redirect(w, r, "http://10.0.0.13:8100/categories", 301)
+	var app App
+	app.GetAppPath()
+	http.Redirect(w, r, app.URI+"/categories", 301)
 
 }
 
