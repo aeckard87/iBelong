@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/pure-layout-side-menu/side-menu.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
   </head>
+  <!-- <body onload="myFunction()"> -->
   <body>
 
     <div id="layout">
@@ -38,9 +39,9 @@
               <label for="detailID">Select Detail</label>
               <select name="detailID" id="detailID" onchange="unlock(this)">
                   <option value="empty">---</option>
-                {{range .}}
-                  <option value="{{.ID}}">{{.Detail}}</option>
-                {{end}}
+                  {{range .Details}}
+                    <option value="{{.ID}}">{{.Detail}}</option>
+                  {{end}}
               </select>
 
               <br>
@@ -63,6 +64,9 @@
   <script src="/js/pure-layout-side-menu/ui.js"></script>
   <script src="/js/pure-dropdown-menu/menus.js"></script>
   <script>
+  // function myFunction() {
+  //   console.log({{.Details}})
+  // }
     function notify(){
       var e = document.getElementById("detailID");
       var cat = e.options[e.selectedIndex].text;
@@ -91,7 +95,7 @@
   function loadDoc(id) {
     el = document.getElementById("devSubCat");
     var xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "http://10.0.0.13:8081/aeckard87/wornOut/v1/details/" + id + "/descriptors", true);
+    xhttp.open("GET", {{.API.URI}} + "/v1/details/" + id + "/descriptors", true);
     xhttp.setRequestHeader("Content-Type", "application/json")
     xhttp.setRequestHeader("Accept", "application/json")
     xhttp.onreadystatechange=function() {

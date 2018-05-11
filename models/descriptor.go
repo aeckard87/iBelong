@@ -81,8 +81,9 @@ func (m *Descriptor) UnmarshalBinary(b []byte) error {
 }
 
 func descriptorsByDetail(id int64) []Descriptor {
-	// fmt.Println("ID", id)
-	url := fmt.Sprintf("http://127.0.0.1:9000/v1/details/%v/descriptors", id)
+	var api API
+	api.GetAPIPath()
+	url := fmt.Sprintf(api.URI+"v1/details/%v/descriptors", id)
 	// fmt.Println(url)
 
 	var client http.Client
@@ -108,15 +109,16 @@ func descriptorsByDetail(id int64) []Descriptor {
 }
 
 func ListDescriptors(w http.ResponseWriter, r *http.Request) { //, ps httprouter.Params) {
+	var data Data
+	data.API.GetAPIPath()
 	tmpl := template.Must(template.ParseFiles("templates/descriptors/listdescriptorsbydetail.html"))
-	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/details"
+	url := data.API.URI + "/v1/details"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
 		// err
 	}
 	defer resp.Body.Close()
-	var details []Detail
 	if resp.StatusCode == http.StatusOK {
 		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
 		if err2 != nil {
@@ -124,19 +126,25 @@ func ListDescriptors(w http.ResponseWriter, r *http.Request) { //, ps httprouter
 		}
 		// bodyString := string(bodyBytes)
 		// fmt.Println(bodyString)
-		json.Unmarshal(bodyBytes, &details)
-		tmpl.Execute(w, details)
+		json.Unmarshal(bodyBytes, &data.Details)
+		tmpl.Execute(w, data)
 	} else {
-		tmpl.Execute(w, details)
+		tmpl.Execute(w, data)
 	}
 }
 
 func GetCreateDescriptor(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("GET Descriptor/Create")
-	// var data Data
-	// data.API.GetAPIPath()
-	// data.Details = GetDetails()
-	details := GetDetails()
+	var data Data
+	data.API.GetAPIPath()
+	data.Details = GetDetails()
+	b, err := json.Marshal(data.Details)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("Details:" + string(b))
+	// details := GetDetails()
 
 	tmpl := template.Must(template.ParseFiles("templates/descriptors/createDescriptor.html"))
 	// tmpl, err := template.New("createDescriptor.html").Funcs(template.FuncMap{
@@ -145,10 +153,12 @@ func GetCreateDescriptor(w http.ResponseWriter, r *http.Request) {
 	// if err != nil {
 	// 	fmt.Println(err)
 	// }
-	tmpl.Execute(w, details)
+	tmpl.Execute(w, data)
 }
 
 func PostCreateDescriptor(w http.ResponseWriter, r *http.Request) {
+	var api API
+	api.GetAPIPath()
 	fmt.Println("POST Descriptor/Create")
 	var descriptor Descriptor
 	err := r.ParseForm()
@@ -162,10 +172,11 @@ func PostCreateDescriptor(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		return
 	}
+	// localhost:8081/aeckard87/wornOut
 
-	request_url := fmt.Sprintf("http://10.0.0.13:8081/aeckard87/wornOut/v1/details/%s/descriptors", r.PostForm.Get("detailID"))
+	request_url := fmt.Sprintf(api.URI+"/v1/details/%s/descriptors", r.PostForm.Get("detailID"))
 	fmt.Println(request_url)
-	req, err := http.NewRequest("POST", request_url, bytes.NewBuffer(b))
+	req, _ := http.NewRequest("POST", request_url, bytes.NewBuffer(b))
 	req.Header.Set("X-Custom-Header", "myvalue")
 	req.Header.Set("Content-Type", "application/json")
 
@@ -181,20 +192,26 @@ func PostCreateDescriptor(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(resp.Body)
 	fmt.Println("response Body:", string(body))
 
-	GetCreateDescriptor(w, r)
+	var app App
+	app.GetAppPath()
+	http.Redirect(w, r, app.URI+"/descriptors", 301)
 
 }
 
 func GetDeleteDescriptor(w http.ResponseWriter, r *http.Request) {
+	var data Data
+	data.API.GetAPIPath()
+	data.Details = GetDetails()
+
 	tmpl := template.Must(template.ParseFiles("templates/descriptors/deleteDescriptor.html"))
-	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/details"
+	url := data.API.URI + "/v1/details"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
 		// err
 	}
 	defer resp.Body.Close()
-	var details []Detail
+
 	if resp.StatusCode == http.StatusOK {
 		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
 		if err2 != nil {
@@ -202,10 +219,10 @@ func GetDeleteDescriptor(w http.ResponseWriter, r *http.Request) {
 		}
 		// bodyString := string(bodyBytes)
 		// fmt.Println(bodyString)
-		json.Unmarshal(bodyBytes, &details)
-		tmpl.Execute(w, details)
+		json.Unmarshal(bodyBytes, &data.Details)
+		tmpl.Execute(w, data)
 	} else {
-		tmpl.Execute(w, details)
+		tmpl.Execute(w, data)
 	}
 }
 
@@ -214,10 +231,11 @@ func PostDeleteDescriptor(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-
-	request_url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/descriptors/" + r.PostForm.Get("descriptorID")
+	var api API
+	api.GetAPIPath()
+	request_url := api.URI + "/v1/descriptors/" + r.PostForm.Get("descriptorID")
 	fmt.Println(request_url)
-	req, err := http.NewRequest("DELETE", request_url, nil)
+	req, _ := http.NewRequest("DELETE", request_url, nil)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -231,20 +249,23 @@ func PostDeleteDescriptor(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(resp.Body)
 	fmt.Println("response Body:", string(body))
 
-	http.Redirect(w, r, "http://10.0.0.13:8100/descriptors", 301)
+	var app App
+	app.GetAppPath()
+	http.Redirect(w, r, app.URI+"/descriptors", 301)
 
 }
 
 func GetUpdateDescriptor(w http.ResponseWriter, r *http.Request) {
+	var data Data
+	data.API.GetAPIPath()
 	tmpl := template.Must(template.ParseFiles("templates/descriptors/updateDescriptor.html"))
-	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/details"
+	url := data.API.URI + "/v1/details"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
 		// err
 	}
 	defer resp.Body.Close()
-	var details []Detail
 	if resp.StatusCode == http.StatusOK {
 		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
 		if err2 != nil {
@@ -252,15 +273,17 @@ func GetUpdateDescriptor(w http.ResponseWriter, r *http.Request) {
 		}
 		// bodyString := string(bodyBytes)
 		// fmt.Println(bodyString)
-		json.Unmarshal(bodyBytes, &details)
-		tmpl.Execute(w, details)
+		json.Unmarshal(bodyBytes, &data.Details)
+		tmpl.Execute(w, data)
 	} else {
-		tmpl.Execute(w, details)
+		tmpl.Execute(w, data)
 	}
 }
 
 func PostUpdateDescriptor(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("POST Detail/Update")
+	var api API
+	api.GetAPIPath()
 	var descriptor Descriptor
 	err := r.ParseForm()
 	if err != nil {
@@ -276,8 +299,8 @@ func PostUpdateDescriptor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	request_url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/descriptors/" + r.PostForm.Get("descriptorID")
-	req, err := http.NewRequest("PUT", request_url, bytes.NewBuffer(b))
+	request_url := api.URI + "/v1/descriptors/" + r.PostForm.Get("descriptorID")
+	req, _ := http.NewRequest("PUT", request_url, bytes.NewBuffer(b))
 	req.Header.Set("X-Custom-Header", "myvalue")
 	req.Header.Set("Content-Type", "application/json")
 
@@ -293,6 +316,8 @@ func PostUpdateDescriptor(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(resp.Body)
 	fmt.Println("response Body:", string(body))
 
-	http.Redirect(w, r, "http://10.0.0.13:8100/descriptors", 301)
+	var app App
+	app.GetAppPath()
+	http.Redirect(w, r, app.URI+"/descriptors", 301)
 
 }

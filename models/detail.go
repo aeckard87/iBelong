@@ -65,7 +65,9 @@ func (m *Detail) UnmarshalBinary(b []byte) error {
 }
 
 func GetDetails() []Detail {
-	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/details/"
+	var api API
+	api.GetAPIPath()
+	url := api.URI + "/v1/details/"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {

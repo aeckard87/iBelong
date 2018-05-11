@@ -40,7 +40,7 @@
               <label form="detailID">Detail:</label>
               <select name="detailID" id="detailID" onchange="load(this)">
                 <option >---</option>
-                    {{range .}}
+                    {{range .Details}}
                         <option value="{{.ID}}">{{.Detail}}</option>
                     {{end}}
               </select>
@@ -96,7 +96,7 @@
       document.getElementById("name").disabled = true;
     }else{
       var xhttp = new XMLHttpRequest();
-      xhttp.open("GET", "http://10.0.0.13:8081/aeckard87/wornOut/v1/details/" + id.value + "/descriptors", true);
+      xhttp.open("GET", {{.API.URI}} + "/v1/details/" + id.value + "/descriptors", true);
       xhttp.setRequestHeader("Content-Type", "application/json")
       xhttp.setRequestHeader("Accept", "application/json")
       xhttp.onreadystatechange=function() {
