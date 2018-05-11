@@ -97,6 +97,12 @@ func GetCreateDetail(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostCreateDetail(w http.ResponseWriter, r *http.Request) {
+	var api API
+	api.GetAPIPath()
+
+	var app App
+	app.GetAppPath()
+
 	fmt.Println("POST Detail/Create")
 	var detail Detail
 	err := r.ParseForm()
@@ -111,8 +117,8 @@ func PostCreateDetail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	request_url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/details"
-	req, err := http.NewRequest("POST", request_url, bytes.NewBuffer(b))
+	request_url := api.URI + "/v1/details"
+	req, _ := http.NewRequest("POST", request_url, bytes.NewBuffer(b))
 	req.Header.Set("X-Custom-Header", "myvalue")
 	req.Header.Set("Content-Type", "application/json")
 
@@ -128,7 +134,7 @@ func PostCreateDetail(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(resp.Body)
 	fmt.Println("response Body:", string(body))
 
-	http.Redirect(w, r, "http://10.0.0.13:8100/details", 301)
+	http.Redirect(w, r, app.URI+"/details", 301)
 
 }
 
@@ -139,6 +145,12 @@ func GetUpdateDetail(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostUpdateDetail(w http.ResponseWriter, r *http.Request) {
+	var api API
+	api.GetAPIPath()
+
+	var app App
+	app.GetAppPath()
+
 	fmt.Println("POST Detail/Create")
 	var detail Detail
 	err := r.ParseForm()
@@ -154,8 +166,8 @@ func PostUpdateDetail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	request_url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/details/" + r.PostForm.Get("detailID")
-	req, err := http.NewRequest("PUT", request_url, bytes.NewBuffer(b))
+	request_url := api.URI + "/v1/details/" + r.PostForm.Get("detailID")
+	req, _ := http.NewRequest("PUT", request_url, bytes.NewBuffer(b))
 	req.Header.Set("X-Custom-Header", "myvalue")
 	req.Header.Set("Content-Type", "application/json")
 
@@ -171,13 +183,16 @@ func PostUpdateDetail(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(resp.Body)
 	fmt.Println("response Body:", string(body))
 
-	http.Redirect(w, r, "http://10.0.0.13:8100/details", 301)
+	http.Redirect(w, r, app.URI+"/details", 301)
 
 }
 
 func ListDetails(w http.ResponseWriter, r *http.Request) { //, ps httprouter.Params) {
+	var api API
+	api.GetAPIPath()
+
 	tmpl := template.Must(template.ParseFiles("templates/details/listDetails.html"))
-	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/details"
+	url := api.URI + "/v1/details"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
@@ -200,8 +215,11 @@ func ListDetails(w http.ResponseWriter, r *http.Request) { //, ps httprouter.Par
 }
 
 func GetDeleteDetail(w http.ResponseWriter, r *http.Request) {
+	var api API
+	api.GetAPIPath()
+
 	tmpl := template.Must(template.ParseFiles("templates/details/deleteDetail.html"))
-	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/details"
+	url := api.URI + "/v1/details"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
@@ -224,6 +242,9 @@ func GetDeleteDetail(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostDeleteDetail(w http.ResponseWriter, r *http.Request) {
+	var api API
+	api.GetAPIPath()
+
 	err := r.ParseForm()
 	if err != nil {
 		fmt.Println(err)
@@ -233,9 +254,9 @@ func PostDeleteDetail(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Key: %s\tValue: %s", key, value)
 	}
 
-	request_url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/details/" + r.PostForm.Get("detailID")
+	request_url := api.URI + "/v1/details/" + r.PostForm.Get("detailID")
 	fmt.Println(request_url)
-	req, err := http.NewRequest("DELETE", request_url, nil)
+	req, _ := http.NewRequest("DELETE", request_url, nil)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)

@@ -38,7 +38,7 @@
               <label form="categoryID">Category where SubCategory resides:</label>
               <select name="categoryID" id="categoryID" onchange="load(this)">
                 <option >---</option>
-                {{range .}}
+                {{range .Categories}}
                     <option value="{{.ID}}">{{.Category}}</option>
                 {{end}}
               </select>
@@ -75,7 +75,7 @@
         }
       }
       var xhttp = new XMLHttpRequest();
-      xhttp.open("GET", "http://10.0.0.13:8081/aeckard87/wornOut/v1/categories/" + id.value + "/subcategories", true);
+      xhttp.open("GET", {{.API.URI}} + "/v1/categories/" + id.value + "/subcategories", true);
       xhttp.setRequestHeader("Content-Type", "application/json")
       xhttp.setRequestHeader("Accept", "application/json")
       xhttp.onreadystatechange=function() {

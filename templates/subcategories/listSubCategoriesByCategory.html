@@ -40,7 +40,7 @@
         </div>
         <div>
           <ul>
-          {{range .}}
+          {{range .Categories}}
           <br><li value="{{.ID}}" onclick="load(this)" style="list-style-type:none;"><button class="pure-button pure-button-primary">{{.Category}}</button><br>
             <ul id="{{.ID}}" value="false"></ul></li>
           {{end}}
@@ -63,7 +63,7 @@
           document.getElementById(id.value).value="false";
     }else{
       var xhttp = new XMLHttpRequest();
-      xhttp.open("GET", "http://10.0.0.13:8081/aeckard87/wornOut/v1/categories/" + id.value + "/subcategories", true);
+      xhttp.open("GET", {{.API.URI}} + "/v1/categories/" + id.value + "/subcategories", true);
       xhttp.setRequestHeader("Content-Type", "application/json")
       xhttp.setRequestHeader("Accept", "application/json")
       xhttp.onreadystatechange=function() {

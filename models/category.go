@@ -67,7 +67,9 @@ func (m *Category) UnmarshalBinary(b []byte) error {
 }
 
 func GetCategories() []Category {
-	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/categories/"
+	var api API
+	api.GetAPIPath()
+	url := api.URI + "/v1/categories/"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
