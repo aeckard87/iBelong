@@ -49,6 +49,14 @@ type Owner struct {
 	Items     []Item
 }
 
+type ItemData struct {
+	//API
+	API API
+
+	//Owner
+	Owner Owner
+}
+
 /* polymorph Item descriptions false */
 
 /* polymorph Item id false */
@@ -179,13 +187,16 @@ func ItemsByOwner(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
+	var api API
+	api.GetAPIPath()
+
 	fmt.Println("GET User")
 	vars := mux.Vars(r)
 	id := vars["ID"]
 
 	tmpl := template.Must(template.ParseFiles("./templates/users/user.html"))
-	itemUrl := "http://10.0.0.13:8081/aeckard87/wornOut/v1/users/" + id + "/items"
-	userUrl := "http://10.0.0.13:8081/aeckard87/wornOut/v1/users/" + id
+	itemUrl := api.URI + "/v1/users/" + id + "/items"
+	userUrl := api.URI + "/v1/users/" + id
 
 	var client http.Client
 	itemResp, err := client.Get(itemUrl)
@@ -196,8 +207,8 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	defer itemResp.Body.Close()
 	defer userResp.Body.Close()
 
-	var items []Item
-	var owner Owner
+	var itemData ItemData
+	itemData.API.GetAPIPath()
 
 	if userResp.StatusCode == http.StatusOK {
 		itemBytes, err2 := ioutil.ReadAll(itemResp.Body)
@@ -208,12 +219,11 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 
 		// bodyString := string(userBytes)
 		// fmt.Println(bodyString)
-		json.Unmarshal(itemBytes, &items)
-		json.Unmarshal(userBytes, &owner)
-		owner.Items = items
+		json.Unmarshal(itemBytes, &itemData.Owner.Items)
+		json.Unmarshal(userBytes, &itemData.Owner)
 
-		tmpl.Execute(w, owner)
+		tmpl.Execute(w, itemData)
 	} else {
-		tmpl.Execute(w, owner)
+		tmpl.Execute(w, itemData)
 	}
 }

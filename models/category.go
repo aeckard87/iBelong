@@ -186,11 +186,14 @@ func PostUpdateCategory(w http.ResponseWriter, r *http.Request) {
 
 //Not working as expected
 func ListCategory(w http.ResponseWriter, r *http.Request) {
+	var api API
+	api.GetAPIPath()
+
 	vars := mux.Vars(r)
 	id := vars["ID"]
 
 	tmpl := template.Must(template.ParseFiles("templates/categories/listCategory.html"))
-	url := fmt.Sprintf("http://10.0.0.13:8081/aeckard87/wornOut/v1/categories/%v", id)
+	url := fmt.Sprintf(api.URI+"/v1/categories/%v", id)
 	fmt.Println("URL", url)
 
 	var client http.Client
@@ -217,8 +220,11 @@ func ListCategory(w http.ResponseWriter, r *http.Request) {
 }
 
 func ListCategories(w http.ResponseWriter, r *http.Request) { //, ps httprouter.Params) {
+	var api API
+	api.GetAPIPath()
+
 	tmpl := template.Must(template.ParseFiles("templates/categories/listCategories.html"))
-	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/categories"
+	url := api.URI + "/v1/categories"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
@@ -241,8 +247,11 @@ func ListCategories(w http.ResponseWriter, r *http.Request) { //, ps httprouter.
 }
 
 func GetDeleteCategory(w http.ResponseWriter, r *http.Request) {
+	var api API
+	api.GetAPIPath()
+
 	tmpl := template.Must(template.ParseFiles("templates/categories/deleteCategory.html"))
-	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/categories"
+	url := api.URI + "/v1/categories"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
@@ -265,6 +274,9 @@ func GetDeleteCategory(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostDeleteCategory(w http.ResponseWriter, r *http.Request) {
+	var api API
+	api.GetAPIPath()
+
 	err := r.ParseForm()
 	if err != nil {
 		fmt.Println(err)
@@ -274,7 +286,7 @@ func PostDeleteCategory(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Key: %s\tValue: %s", key, value)
 	}
 
-	request_url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/categories/" + r.PostForm.Get("categoryID")
+	request_url := api.URI + "/v1/categories/" + r.PostForm.Get("categoryID")
 	fmt.Println(request_url)
 	req, err := http.NewRequest("DELETE", request_url, nil)
 

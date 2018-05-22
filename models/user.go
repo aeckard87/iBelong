@@ -40,6 +40,18 @@ type User struct {
 	Email string `json:"email,omitempty"`
 }
 
+type UserData struct {
+
+	//API
+	API API
+
+	// Users
+	Users []User
+
+	// // User
+	// User User
+}
+
 /* polymorph User email false */
 
 /* polymorph User firstName false */
@@ -79,8 +91,11 @@ func (m *User) UnmarshalBinary(b []byte) error {
 }
 
 func GetListUsers(w http.ResponseWriter, r *http.Request) {
+	var api API
+	api.GetAPIPath()
+
 	usersTmpl := template.Must(template.ParseFiles("templates/users/users.html"))
-	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/users"
+	url := api.URI + "/v1/users"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
@@ -103,8 +118,11 @@ func GetListUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetCreateUser(w http.ResponseWriter, r *http.Request) {
+	var api API
+	api.GetAPIPath()
+
 	usersTmpl := template.Must(template.ParseFiles("templates/users/createUser.html"))
-	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/users"
+	url := api.URI + "/v1/users"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
@@ -126,6 +144,9 @@ func GetCreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func PostCreateUser(w http.ResponseWriter, r *http.Request) {
+	var api API
+	api.GetAPIPath()
+
 	fmt.Println("POST User/Create")
 	var user User
 	err := r.ParseForm()
@@ -145,7 +166,7 @@ func PostCreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	request_url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/users"
+	request_url := api.URI + "/v1/users"
 	req, err := http.NewRequest("POST", request_url, bytes.NewBuffer(b))
 	req.Header.Set("X-Custom-Header", "myvalue")
 	req.Header.Set("Content-Type", "application/json")
@@ -168,15 +189,20 @@ func PostCreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUpdateUser(w http.ResponseWriter, r *http.Request) {
+	var api API
+	api.GetAPIPath()
+
+	var userData UserData
+	userData.API.GetAPIPath()
+
 	usersTmpl := template.Must(template.ParseFiles("templates/users/updateUser.html"))
-	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/users"
+	url := api.URI + "/v1/users"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
 		// err
 	}
 	defer resp.Body.Close()
-	var users []User
 	if resp.StatusCode == http.StatusOK {
 		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
 		if err2 != nil {
@@ -184,13 +210,18 @@ func GetUpdateUser(w http.ResponseWriter, r *http.Request) {
 		}
 		// bodyString := string(bodyBytes)
 		// fmt.Println(bodyString)
-		json.Unmarshal(bodyBytes, &users)
-		usersTmpl.Execute(w, users)
+		json.Unmarshal(bodyBytes, &userData.Users)
+		usersTmpl.Execute(w, userData)
 	} else {
-		usersTmpl.Execute(w, users)
+		usersTmpl.Execute(w, userData)
 	}
 }
 func PostUpdateUser(w http.ResponseWriter, r *http.Request) {
+	var app App
+	app.GetAppPath()
+	var api API
+	api.GetAPIPath()
+
 	fmt.Println("POST User/Update")
 	var user User
 	err := r.ParseForm()
@@ -212,7 +243,7 @@ func PostUpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	request_url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/users/" + r.PostForm.Get("userID")
+	request_url := api.URI + "/v1/users/" + r.PostForm.Get("userID")
 	req, err := http.NewRequest("PUT", request_url, bytes.NewBuffer(b))
 	// req.Header.Set("X-Custom-Header", "myvalue")
 	req.Header.Set("Content-Type", "application/json")
@@ -229,13 +260,16 @@ func PostUpdateUser(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(resp.Body)
 	fmt.Println("response Body:", string(body))
 
-	http.Redirect(w, r, "http://10.0.0.13:8100/users", 301)
+	http.Redirect(w, r, app.URI+"/users", 301)
 
 }
 
 func GetDeleteUser(w http.ResponseWriter, r *http.Request) {
+	var api API
+	api.GetAPIPath()
+
 	usersTmpl := template.Must(template.ParseFiles("templates/users/deleteUser.html"))
-	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/users"
+	url := api.URI + "/v1/users"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
@@ -257,6 +291,9 @@ func GetDeleteUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func PostDeleteUser(w http.ResponseWriter, r *http.Request) {
+	var api API
+	api.GetAPIPath()
+
 	err := r.ParseForm()
 	if err != nil {
 		fmt.Println(err)
@@ -266,7 +303,7 @@ func PostDeleteUser(w http.ResponseWriter, r *http.Request) {
 	// 	fmt.Printf("Key: %s\tValue: %s", key, value)
 	// }
 
-	request_url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/users/" + r.PostForm.Get("userID")
+	request_url := api.URI + "/v1/users/" + r.PostForm.Get("userID")
 	fmt.Println(request_url)
 	req, err := http.NewRequest("DELETE", request_url, nil)
 

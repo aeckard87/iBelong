@@ -33,32 +33,12 @@
         <h1><i class="fas fa-edit"></i> Users</h1>
       </div>
       <div id="content" class="center">
-        <!-- <form class="pure-form pure-form-stacked" action="/users/update" id="updateUser" method="post" name="updateUser"> -->
-        <!--     <fieldset> -->
-        <!--       <label form="userID">User to Edit:</label> -->
-        <!--       <select name="userID" id="userID" onchange="setField(this)"> -->
-        <!--         <option value="">---</option> -->
-        <!--         {{range .}} -->
-        <!--         <option value="{{.ID}}">{{.FirstName}} {{.LastName}}</option> -->
-        <!--         {{end}} -->
-        <!--       </select> -->
-
-        <!--       <br> -->
-
-        <!--       <label for="name">New User's Name</label> -->
-        <!--       <input type="text" placeholder="Tops" name="name" id="name"> -->
-
-        <!--       <button class="pure-button pure-button-primary" type="submit" form="updateUser" value="Submit">Save</button> -->
-        <!--     </fieldset> -->
-        <!-- </form> -->
-
-
         <form class="pure-form pure-form-stacked" action="/users/update" id="updateUser" method="post" name="updateUser">
             <fieldset>
               <label form="userID">Select User:</label>
               <select name="userID" id="userID" onchange="setField(this)">
                 <option value="---">---</option>
-                {{range .}}
+                {{range .Users}}
                 <option value="{{.ID}}">{{.FirstName}} {{.LastName}}</option>
                 {{end}}
               </select>
@@ -100,6 +80,7 @@
   <script src="/js/pure-layout-side-menu/ui.js"></script>
   <script src="/js/pure-dropdown-menu/menus.js"></script>
   <script>
+    console.log({{.}})
     function setField(sel) {
 
       if (sel.value == '---') {
@@ -114,7 +95,7 @@
         document.getElementById("username").disabled = true;
       }else{
         var xhttp = new XMLHttpRequest();
-        xhttp.open("GET", "http://10.0.0.13:8081/aeckard87/wornOut/v1/users/" + sel.value , true);
+        xhttp.open("GET", {{.API.URI}} + "/v1/users/" + sel.value , true);
         xhttp.setRequestHeader("Content-Type", "application/json")
         xhttp.setRequestHeader("Accept", "application/json")
         xhttp.onreadystatechange=function() {
