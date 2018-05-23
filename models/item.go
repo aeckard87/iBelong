@@ -49,12 +49,20 @@ type Owner struct {
 	Items     []Item
 }
 
-type ItemData struct {
+type OwnerData struct {
 	//API
 	API API
 
 	//Owner
 	Owner Owner
+}
+
+type ItemData struct {
+	//API
+	API API
+
+	//Item
+	Item Item
 }
 
 /* polymorph Item descriptions false */
@@ -96,8 +104,11 @@ func (m *Item) UnmarshalBinary(b []byte) error {
 }
 
 func GetListItems(w http.ResponseWriter, r *http.Request) {
+	var api API
+	api.GetAPIPath()
+
 	itemTmpl := template.Must(template.ParseFiles("templates/items/items.html"))
-	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/items"
+	url := api.URI + "/v1/items"
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
@@ -120,19 +131,24 @@ func GetListItems(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetListItem(w http.ResponseWriter, r *http.Request) {
+	var api API
+	api.GetAPIPath()
+
 	fmt.Println("GET Item")
 	vars := mux.Vars(r)
 	id := vars["ID"]
 
 	itemTmpl := template.Must(template.ParseFiles("templates/items/item.html"))
-	url := "http://10.0.0.13:8081/aeckard87/wornOut/v1/items/" + id
+	url := api.URI + "/v1/items/" + id
 	var client http.Client
 	resp, err := client.Get(url)
 	if err != nil {
 		// err
 	}
 	defer resp.Body.Close()
-	var item Item
+	var item ItemData
+	item.API.GetAPIPath()
+
 	if resp.StatusCode == http.StatusOK {
 		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
 		if err2 != nil {
@@ -140,20 +156,23 @@ func GetListItem(w http.ResponseWriter, r *http.Request) {
 		}
 		// bodyString := string(bodyBytes)
 		// fmt.Println(bodyString)
-		json.Unmarshal(bodyBytes, &item)
+		json.Unmarshal(bodyBytes, &item.Item)
 		itemTmpl.Execute(w, item)
 	} else {
 		itemTmpl.Execute(w, item)
 	}
 }
 func ItemsByOwner(w http.ResponseWriter, r *http.Request) {
+	var api API
+	api.GetAPIPath()
+
 	fmt.Println("GET ItemsByOwner")
 	vars := mux.Vars(r)
 	id := vars["ID"]
 
 	tmpl := template.Must(template.ParseFiles("./templates/items/itemsByOwner.html"))
-	itemUrl := "http://10.0.0.13:8081/aeckard87/wornOut/v1/users/" + id + "/items"
-	userUrl := "http://10.0.0.13:8081/aeckard87/wornOut/v1/users/" + id
+	itemUrl := api.URI + "/v1/users/" + id + "/items"
+	userUrl := api.URI + "/v1/users/" + id
 
 	var client http.Client
 	itemResp, err := client.Get(itemUrl)
@@ -207,8 +226,8 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	defer itemResp.Body.Close()
 	defer userResp.Body.Close()
 
-	var itemData ItemData
-	itemData.API.GetAPIPath()
+	var ownerData OwnerData
+	ownerData.API.GetAPIPath()
 
 	if userResp.StatusCode == http.StatusOK {
 		itemBytes, err2 := ioutil.ReadAll(itemResp.Body)
@@ -219,11 +238,11 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 
 		// bodyString := string(userBytes)
 		// fmt.Println(bodyString)
-		json.Unmarshal(itemBytes, &itemData.Owner.Items)
-		json.Unmarshal(userBytes, &itemData.Owner)
+		json.Unmarshal(itemBytes, &ownerData.Owner.Items)
+		json.Unmarshal(userBytes, &ownerData.Owner)
 
-		tmpl.Execute(w, itemData)
+		tmpl.Execute(w, ownerData)
 	} else {
-		tmpl.Execute(w, itemData)
+		tmpl.Execute(w, ownerData)
 	}
 }
