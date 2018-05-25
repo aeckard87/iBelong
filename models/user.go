@@ -14,6 +14,7 @@ import (
 	"net/http"
 
 	strfmt "github.com/go-openapi/strfmt"
+	"github.com/gorilla/mux"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
@@ -40,7 +41,7 @@ type User struct {
 	Email string `json:"email,omitempty"`
 }
 
-type UserData struct {
+type UsersData struct {
 
 	//API
 	API API
@@ -192,7 +193,7 @@ func GetUpdateUser(w http.ResponseWriter, r *http.Request) {
 	var api API
 	api.GetAPIPath()
 
-	var userData UserData
+	var userData UsersData
 	userData.API.GetAPIPath()
 
 	usersTmpl := template.Must(template.ParseFiles("templates/users/updateUser.html"))
@@ -321,4 +322,40 @@ func PostDeleteUser(w http.ResponseWriter, r *http.Request) {
 
 	GetListUsers(w, r)
 
+}
+
+func GetUser(w http.ResponseWriter, r *http.Request) {
+	var api API
+	api.GetAPIPath()
+
+	fmt.Println("GET User")
+	vars := mux.Vars(r)
+	id := vars["ID"]
+
+	tmpl := template.Must(template.ParseFiles("./templates/users/user2.html"))
+	userUrl := api.URI + "/v1/users/" + id
+
+	var client http.Client
+	userResp, err := client.Get(userUrl)
+	if err != nil {
+		// err
+	}
+	defer userResp.Body.Close()
+
+	var user User
+
+	if userResp.StatusCode == http.StatusOK {
+		userBytes, err2 := ioutil.ReadAll(userResp.Body)
+		if err2 != nil {
+			fmt.Println(err2)
+		}
+
+		// bodyString := string(userBytes)
+		// fmt.Println(bodyString)
+		json.Unmarshal(userBytes, &user)
+
+		tmpl.Execute(w, user)
+	} else {
+		tmpl.Execute(w, user)
+	}
 }
